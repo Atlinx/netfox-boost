@@ -28,6 +28,9 @@ protected:
 	static void _bind_methods();
 
 public:
+	_SnapshotHistoryEncoder() = default;
+	~_SnapshotHistoryEncoder() override = default;
+
 	void set_properties(Array properties);
 	Array encode(int tick, TypedArray<PropertyEntry> properties);
 	Ref<_PropertySnapshot> decode(Array data, TypedArray<PropertyEntry> properties);

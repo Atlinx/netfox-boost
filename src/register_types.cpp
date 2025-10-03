@@ -18,7 +18,6 @@
 #include "snapshot_history_encoder.h"
 #include "rollback_history_recorder.h"
 #include "rollback_history_transmitter.h"
-#include "rollback_synchronizer.h"
 
 using namespace godot;
 
@@ -40,7 +39,6 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(_SnapshotHistoryEncoder);
 	GDREGISTER_CLASS(_RollbackHistoryRecorder);
 	GDREGISTER_CLASS(_RollbackHistoryTransmitter);
-	GDREGISTER_CLASS(RollbackSynchronizer);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {
