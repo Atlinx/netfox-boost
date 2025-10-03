@@ -1,13 +1,11 @@
-# godot-cpp template
-This repository serves as a quickstart template for GDExtension development with Godot 4.0+.
+# 🦊⚡ netfox boost
 
-## Contents
-* An empty Godot project (`demo/`)
-* godot-cpp as a submodule (`godot-cpp/`)
-* GitHub Issues template (`.github/ISSUE_TEMPLATE.yml`)
-* GitHub CI/CD workflows to publish your library packages when creating a release (`.github/workflows/builds.yml`)
-* preconfigured source files for C++ development of the GDExtension (`src/`)
-* setup to automatically generate `.xml` files in a `doc_classes/` directory to be parsed by Godot as [GDExtension built-in documentation](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_docs_system.html)
+This repository contains a GDExtension that boosts the performance of [netfox](https://github.com/foxssake/netfox) by running
+repetitive tasks in cpp.
+
+## Installation
+
+Download the latest files from the releases page.
 
 ## Usage - Template
 
@@ -23,6 +21,10 @@ For getting started after cloning your own copy to your local machine, you shoul
 * change the `entry_symbol` string inside your `demo/bin/your-extension.gdextension` file to be configured for your GDExtension name. This should be the same as the `GDExtensionBool GDE_EXPORT` external C function. As the name suggests, this sets the entry function for your GDExtension to be loaded by the Godot editors C API.
 * register the classes you want Godot to interact with inside the `register_types.cpp` file in the initialization method (here `initialize_gdextension_types`) in the syntax `GDREGISTER_CLASS(CLASS-NAME);`.
 
+## Development
+
+After cloning your own copy to your local machine, make sure to initialize the godot-cpp git submodule via `git submodule update --init`.
+
 ### Configuring an IDE 
 You can develop your own extension with any text editor and by invoking scons on the command line, but if you want to work with an IDE (Integrated Development Environment), you can use a compilation database file called `compile_commands.json`. Most IDEs should automatically identify this file, and self-configure appropriately.
 To generate the database file, you can run one of the following commands in the project root directory:
@@ -33,8 +35,3 @@ scons compiledb=yes
 # Generate compile_commands.json without compiling
 scons compiledb=yes compile_commands.json
 ```
-
-## Usage - Actions
-
-This repository comes with a GitHub action that builds the GDExtension for cross-platform use. It triggers automatically for each pushed change. You can find and edit it in [builds.yml](.github/workflows/builds.yml).
-After a workflow run is complete, you can find the file `godot-cpp-template.zip` on the `Actions` tab on GitHub.
