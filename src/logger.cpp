@@ -1,0 +1,257 @@
+#include "logger.h"
+
+#include <godot_cpp/core/object.hpp>
+#include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
+#include <godot_cpp/templates/local_vector.hpp>
+
+bool _NetfoxLogger::_static_initialized = false;
+
+void _NetfoxLogger::set_module_log_level(const Dictionary& p_log_levels) {
+	module_log_level.clear();
+	Array keys = p_log_levels.keys();
+	for (int i = 0; i < keys.size(); ++i) {
+		String key = keys[i];
+		module_log_level[key] = p_log_levels[key].operator int();
+	}
+}
+
+Dictionary _NetfoxLogger::get_module_log_level() {
+	Dictionary dict;
+	for (const KeyValue<String, int>& E : module_log_level) {
+		dict[E.key] = E.value;
+	}
+	return dict;
+}
+
+Ref<_NetfoxLogger> _new(String p_module, String p_name)
+{
+	Ref<_NetfoxLogger> logger;
+	logger.instantiate();
+	logger->_init(p_module, p_name);
+	return logger;
+}
+
+Ref<_NetfoxLogger> _NetfoxLogger::for_netfox(String p_name)
+{
+	return _NetfoxLogger::_new("netfox", p_name);
+}
+
+Ref<_NetfoxLogger> _NetfoxLogger::for_noray(String p_name)
+{
+	return _NetfoxLogger::_new("netfox.noray", p_name);
+}
+Ref<_NetfoxLogger> _NetfoxLogger::for_extras(String p_name)
+{
+	return _NetfoxLogger::_new("netfox.extras", p_name);
+}
+
+Dictionary _NetfoxLogger::make_setting(String name)
+{
+	Dictionary dict;
+
+	dict["name"] = name;
+	dict["value"] = DEFAULT_LOG_LEVEL;
+	dict["type"] = Variant::INT;
+	dict["hint"] = PROPERTY_HINT_ENUM;
+	dict["hint_string"] = "All,Trace,Debug,Info,Warning,Error,None";
+
+	return dict;
+}
+
+void _NetfoxLogger::register_tag(Callable tag, int priority)
+{
+	if (!_tags.has(priority)) {
+		_tags[priority] = Vector<Callable>();
+	}
+	_tags[priority].push_back(tag);
+
+	_ordered_tags.clear();
+	
+	LocalVector<int> prio_groups;
+	for (const KeyValue<int, Vector<Callable>>& E : _tags) {
+		prio_groups.push_back(E.key);
+	}
+	prio_groups.sort();
+
+	for (int i = 0; i < prio_groups.size(); ++i) {
+		int prio_group = prio_groups[i];
+		const Vector<Callable>& tag_group = _tags[prio_group];
+		for (int j = 0; j < tag_group.size(); ++j) {
+			_ordered_tags.push_back(tag_group[j]);
+		}
+	}
+}
+
+void _NetfoxLogger::free_tag(Callable tag)
+{
+	LocalVector<int> keys_to_erase;
+	for (KeyValue<int, Vector<Callable>>& E : _tags) {
+		Vector<Callable>& priority_group = E.value;
+		priority_group.erase(tag);
+
+		if (priority_group.is_empty()) {
+			keys_to_erase.push_back(E.key);
+		}
+	}
+
+	for (int key : keys_to_erase) {
+		_tags.erase(key);
+	}
+
+	_ordered_tags.erase(tag);
+}
+
+void _NetfoxLogger::_static_init()
+{
+	if (_static_initialized)
+		return;
+	_static_initialized = true;
+	log_level = ProjectSettings::get_singleton()->get_setting("netfox/logging/log_level", DEFAULT_LOG_LEVEL).operator int();
+
+	module_log_level["netfox"] = ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_log_level", DEFAULT_LOG_LEVEL).operator int();
+	module_log_level["netfox.noray"] = ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_noray_log_level", DEFAULT_LOG_LEVEL).operator int();
+	module_log_level["netfox.extras"] = ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_extras_log_level", DEFAULT_LOG_LEVEL).operator int();
+}
+
+void _NetfoxLogger::_init(String p_module, String p_name)
+{
+	_static_init();
+
+	module = p_module;
+	name = p_name;
+}
+
+bool _NetfoxLogger::_check_log_level(int level)
+{
+	int cmp_level = log_level;
+	if (level < cmp_level) {
+		return false;
+	}
+
+	if (module_log_level.has(module)) {
+		int module_level = module_log_level[module];
+		return level >= module_level;
+	}
+
+	return true;
+}
+
+String _NetfoxLogger::_format_text(String text, Array values, int level)
+{
+	level = CLAMP(level, LOG_MIN, LOG_MAX);
+
+	PackedStringArray result;
+
+	Array prefix_array_1;
+	prefix_array_1.push_back(level_prefixes[level]);
+	result.append(vformat("[%s]", prefix_array_1));
+	
+	for (int i = 0; i < _ordered_tags.size(); ++i) {
+		Callable tag = _ordered_tags[i];
+		Array tag_array;
+		tag_array.push_back(tag.call());
+		result.append(vformat("[%s]", tag_array));
+	}
+	
+	Array module_name_array;
+	module_name_array.push_back(module);
+	module_name_array.push_back(name);
+	result.append(vformat("[%s::%s] ", module_name_array));
+
+	if (values.is_empty()) {
+		result.append(text);
+	} else {
+		result.append(vformat(text, values));
+	}
+
+	return String("").join(result);
+}
+
+void _NetfoxLogger::_log_text(String text, Array values, int level)
+{
+	if(_check_log_level(level))
+	{
+		UtilityFunctions::print(_format_text(text, values, level));
+	}
+}
+
+void _NetfoxLogger::trace(String text, Array values)
+{
+	_log_text(text, values, LOG_TRACE);
+}
+
+void _NetfoxLogger::debug(String text, Array values)
+{
+	_log_text(text, values, LOG_DEBUG);
+}
+
+void _NetfoxLogger::info(String text, Array values)
+{
+	_log_text(text, values, LOG_INFO);
+}
+
+void _NetfoxLogger::warning(String text, Array values)
+{
+	if(_check_log_level(LOG_WARN))
+	{
+		String formatted_text = _format_text(text, values, LOG_WARN);
+		UtilityFunctions::push_warning(formatted_text);
+
+		UtilityFunctions::print(formatted_text);
+	}
+}
+
+void _NetfoxLogger::error(String text, Array values)
+{
+	if(_check_log_level(LOG_ERROR))
+	{
+		String formatted_text = _format_text(text, values, LOG_ERROR);
+		UtilityFunctions::push_error(formatted_text);
+
+		UtilityFunctions::print(formatted_text);
+	}
+}
+
+void _NetfoxLogger::_bind_methods() {
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("new", "p_module", "p_name"), &_NetfoxLogger::_new);
+
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("set_log_level", "level"), &_NetfoxLogger::set_log_level);
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("get_log_level"), &_NetfoxLogger::get_log_level);
+
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("set_module_log_level", "log_levels"), &_NetfoxLogger::set_module_log_level);
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("get_module_log_level"), &_NetfoxLogger::get_module_log_level);
+
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("for_netfox", "p_name"), &_NetfoxLogger::for_netfox);
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("for_noray", "p_name"), &_NetfoxLogger::for_noray);
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("for_extras", "p_name"), &_NetfoxLogger::for_extras);
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("make_setting", "name"), &_NetfoxLogger::make_setting);
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("register_tag", "tag", "priority"), &_NetfoxLogger::register_tag);
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("free_tag", "tag"), &_NetfoxLogger::free_tag);
+	ClassDB::bind_method(D_METHOD("trace", "text", "values"), &_NetfoxLogger::trace);
+	ClassDB::bind_method(D_METHOD("debug", "text", "values"), &_NetfoxLogger::debug);
+	ClassDB::bind_method(D_METHOD("info", "text", "values"), &_NetfoxLogger::info);
+	ClassDB::bind_method(D_METHOD("warning", "text", "values"), &_NetfoxLogger::warning);
+	ClassDB::bind_method(D_METHOD("error", "text", "values"), &_NetfoxLogger::error);
+
+	ADD_PROPERTY(
+		PropertyInfo(Variant::INT, "log_level", PROPERTY_HINT_ENUM, "Trace,Debug,Info,Warn,Error"),
+		"set_log_level",
+		"get_log_level"
+	);
+
+	ADD_PROPERTY(
+		PropertyInfo(Variant::DICTIONARY, "module_log_level"),
+		"set_module_log_level",
+		"get_module_log_level"
+	);
+
+	BIND_ENUM_CONSTANT(LOG_MIN);
+	BIND_ENUM_CONSTANT(LOG_TRACE);
+	BIND_ENUM_CONSTANT(LOG_DEBUG);
+	BIND_ENUM_CONSTANT(LOG_INFO);
+	BIND_ENUM_CONSTANT(LOG_WARN);
+	BIND_ENUM_CONSTANT(LOG_ERROR);
+	BIND_ENUM_CONSTANT(LOG_MAX);
+}
