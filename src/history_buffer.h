@@ -17,6 +17,7 @@ public:
 
 protected:
 	HashMap<int, Variant> _buffer;
+	static void _bind_methods();
 
 public:
 	Variant get_snapshot(int tick);
@@ -33,5 +34,4 @@ public:
 	bool has(int tick);
 	Array ticks();
 	void erase(int tick);
-	static void _bind_methods();
 };

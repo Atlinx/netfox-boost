@@ -21,12 +21,10 @@ Node* Utils::get_autoload(String autoload) {
 	return nullptr;
 }
 
-bool is_instance_valid(Variant variant)
+bool Utils::is_instance_valid(const Variant &p_instance)
 {
-	if (Object::cast_to<Node>(variant)) {
-		Node* node = Object::cast_to<Node>(variant);
-		return node != nullptr && UtilityFunctions::is_instance_id_valid(node->get_instance_id());
-	} else {
-		return variant.get_type()!= Variant::NIL;
+	if (p_instance.get_type() != Variant::OBJECT) {
+		return false;
 	}
+	return p_instance.get_validated_object() != nullptr;
 }

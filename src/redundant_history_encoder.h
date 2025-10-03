@@ -26,12 +26,15 @@ protected:
 	int _version = 0;
 	bool _has_received = false;
 
-	Ref<_NetfoxLogger> _logger = _NetfoxLogger::for_netfox("RedundantHistoryEncoder");
+	static Ref<_NetfoxLogger> _logger;
 	static void _bind_methods();
 
 public:
 	_RedundantHistoryEncoder() = default;
 	~_RedundantHistoryEncoder() override = default;
+
+	static void _static_init();
+	static Ref<_RedundantHistoryEncoder> _new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
 
 	int get_redundancy();
 	void set_redundancy(int p_redundancy);
@@ -39,6 +42,4 @@ public:
 	Array encode(int tick, TypedArray<PropertyEntry> properties);
 	TypedArray<_PropertySnapshot> decode(Array data, TypedArray<PropertyEntry> properties);
 	int apply(int tick, TypedArray<_PropertySnapshot> snapshots, int sender = 0);
-
-	static Ref<_RedundantHistoryEncoder> _new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
 };

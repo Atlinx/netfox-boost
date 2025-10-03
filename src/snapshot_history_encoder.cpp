@@ -6,8 +6,15 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-Ref<_SnapshotHistoryEncoder> _SnapshotHistoryEncoder::_new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
+Ref<_NetfoxLogger> _SnapshotHistoryEncoder::_logger;
+
+void _SnapshotHistoryEncoder::_static_init()
 {
+	_logger = _NetfoxLogger::for_netfox("_SnapshotHistoryEncoder");
+}
+
+Ref<_SnapshotHistoryEncoder> _SnapshotHistoryEncoder::_new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
+{	
 	Ref<_SnapshotHistoryEncoder> ref;
 	ref.instantiate();
 	ref->_history = p_history;

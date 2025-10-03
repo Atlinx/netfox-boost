@@ -21,12 +21,13 @@ protected:
 	HashMap<String, Ref<PropertyEntry>> _cache;
 
 	static Ref<_NetfoxLogger> _logger;
-
 	static void _bind_methods();
 	
 public:
 	PropertyCache() = default;
 	~PropertyCache() override = default;
+
+	static void _static_init();
 
 	Ref<PropertyEntry> get_entry(String path);
 	TypedArray<PropertyEntry> gd_properties();

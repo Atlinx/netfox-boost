@@ -17,6 +17,8 @@ protected:
 	static void _bind_methods();
 
 public:
+	static Ref<RollbackFreshnessStore> _new();
+
 	RollbackFreshnessStore() = default;
 	~RollbackFreshnessStore() override = default;
 
@@ -24,6 +26,4 @@ public:
 	void notify_processed(Node* node, int tick);
 	void trim();
 	void clear();
-	
-	static Ref<RollbackFreshnessStore> _new();
 };

@@ -5,8 +5,18 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
+Ref<_NetfoxLogger> PropertyCache::_logger;
+
+void PropertyCache::_static_init()
+{
+	_logger = _NetfoxLogger::for_netfox("PropertyCache");
+}
+
 Ref<PropertyCache> PropertyCache::_new(Node* p_root)
 {
+	if (_logger.is_null())
+		_logger = _NetfoxLogger::for_netfox("PropertyCache");
+	
 	Ref<PropertyCache> ref;
 	ref.instantiate();
 	ref->root = p_root;

@@ -7,8 +7,15 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/classes/stream_peer_buffer.hpp>
 
-Ref<_DiffHistoryEncoder> _DiffHistoryEncoder::_new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
+Ref<_NetfoxLogger> _DiffHistoryEncoder::_logger;
+
+void _DiffHistoryEncoder::_static_init()
 {
+	_logger = _NetfoxLogger::for_netfox("DiffHistoryEncoder");
+}
+
+Ref<_DiffHistoryEncoder> _DiffHistoryEncoder::_new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
+{	
 	Ref<_DiffHistoryEncoder> ref;
 	ref.instantiate();
 	ref->_history = p_history;
@@ -34,7 +41,7 @@ void _DiffHistoryEncoder::add_properties(Array properties)
 
 PackedByteArray _DiffHistoryEncoder::encode(int tick, int reference_tick, Array properties)
 {
-	ERR_FAIL_COND_MSG(properties.size() > 255, "Property indices may not fit into bytes!");
+	ERR_FAIL_COND_V_MSG(properties.size() > 255, PackedByteArray(), "Property indices may not fit into bytes!");
 
 	Ref<_PropertySnapshot> snapshot = _history->get_snapshot(tick);
 	Ref<_PropertySnapshot> reference_snapshot = _history->get_history(reference_tick);
@@ -50,10 +57,10 @@ PackedByteArray _DiffHistoryEncoder::encode(int tick, int reference_tick, Array 
 	buffer.instantiate();
 	buffer->put_u8(_version);
 
-	Array properties = diff_snapshot->properties();
-	for(int i = 0; i < properties.size(); ++i)
+	TypedArray<String> diff_properties = diff_snapshot->properties();
+	for(int i = 0; i < diff_properties.size(); ++i)
 	{
-		String property = properties[i];
+		String property = diff_properties[i];
 		int property_idx = _property_indexes.get_by_value(property);
 		Variant property_value = diff_snapshot->get_value(property);
 
@@ -171,7 +178,8 @@ bool _DiffHistoryEncoder::_ensure_property_idx(String property)
 	return true;
 }
 
-void _DiffHistoryEncoder::_bind_methods() {
+void _DiffHistoryEncoder::_bind_methods() 
+{
 	ClassDB::bind_static_method("_DiffHistoryEncoder", D_METHOD("new", "p_history", "p_property_cache"), &_DiffHistoryEncoder::_new);
 	ClassDB::bind_method(D_METHOD("add_properties", "properties"), &_DiffHistoryEncoder::add_properties);
 	ClassDB::bind_method(D_METHOD("encode", "tick", "reference_tick", "properties"), &_DiffHistoryEncoder::encode);

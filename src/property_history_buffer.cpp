@@ -22,7 +22,7 @@ Ref<_PropertySnapshot> _PropertyHistoryBuffer::get_snapshot(int tick)
 
 void _PropertyHistoryBuffer::set_snapshot(int tick, Variant data)
 {
-	if(Object::cast_to<Dictionary>(data))
+	if(data.get_type() == Variant::DICTIONARY)
 	{
 		Ref<_PropertySnapshot> snapshot = _PropertySnapshot::from_dictionary(data);
 		_HistoryBuffer::set_snapshot(tick, snapshot);

@@ -31,7 +31,7 @@ protected:
 // Provided externally by RBS
 	Ref<_PropertyHistoryBuffer> _state_history;
 	Ref<_PropertyHistoryBuffer> _input_history;
-	Ref<PeerVisibilityFilter> _visibility_filter;
+	PeerVisibilityFilter* _visibility_filter;
 
 	Ref<_PropertyConfig> _state_property_config;
 	Ref<_PropertyConfig> _input_property_config;
@@ -59,16 +59,19 @@ protected:
 	/* signal _on_transmit_state(Dictionary state, int tick) */
 
 	static Ref<_NetfoxLogger> _logger;
+	static void _bind_methods();
 
 public:
 	_RollbackHistoryTransmitter() = default;
 	~_RollbackHistoryTransmitter() override = default;
 
+	static void _static_init();
+
 	int get_earliest_input_tick();
 	int get_latest_state_tick();
 	void set_predicted_tick(Variant p_is_predicted_tick);
 	void sync_settings(Node* p_root, bool p_enable_input_broadcast, int p_full_state_interval, int p_diff_ack_interval);
-	void configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, Ref<PeerVisibilityFilter> p_visibility_filter, Ref<PropertyCache> p_property_cache, HashSet<Node*> p_skipset);
+	void configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, PeerVisibilityFilter* p_visibility_filter, Ref<PropertyCache> p_property_cache, HashSet<Node*> p_skipset);
 	void reset();
 	void conclude_tick_loop();
 	void transmit_input(int tick);
@@ -89,6 +92,4 @@ public:
 	TypedArray<PropertyEntry> _get_owned_state_props();
 	TypedArray<PropertyEntry> _get_recorded_input_props();
 	TypedArray<PropertyEntry> _get_owned_input_props();
-
-	static void _bind_methods();
 };

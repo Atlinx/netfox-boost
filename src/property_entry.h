@@ -22,6 +22,10 @@ public:
 	PropertyEntry() = default;
 	~PropertyEntry() override = default;
 
+	static void _static_init();
+	static Ref<PropertyEntry> parse(Node* root, String path);
+	static String make_path(Node* root, Variant node, String property);
+
 	String path;
 	Node* node;
 	String property;
@@ -30,7 +34,4 @@ public:
 	void set_value(Variant value);
 	bool is_valid();
 	String to_string() const;
-
-	static Ref<PropertyEntry> parse(Node* root, String path);
-	static String make_path(Node* root, Variant node, String property);
 };

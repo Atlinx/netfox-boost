@@ -5,6 +5,13 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
+Ref<_NetfoxLogger> _PropertySnapshot::_logger;
+
+void _PropertySnapshot::_static_init()
+{
+	_logger = _NetfoxLogger::for_netfox("_PropertySnapshot");
+}
+
 Dictionary _PropertySnapshot::as_dictionary()
 {
 	return _snapshot.duplicate();
@@ -33,9 +40,11 @@ Variant _PropertySnapshot::get_value(String property_path)
 	return _snapshot.get(property_path, Variant());
 }
 
-Array _PropertySnapshot::properties()
+TypedArray<String> _PropertySnapshot::properties()
 {
-	return _snapshot.keys();
+	TypedArray<String> res;
+	res.assign(_snapshot.keys());
+	return res;
 }
 
 bool _PropertySnapshot::has(String property_path)
@@ -88,7 +97,7 @@ Ref<_PropertySnapshot> _PropertySnapshot::make_patch(Ref<_PropertySnapshot> data
 {
 	Dictionary result = Dictionary();
 
-	Array keys = data->properties();
+	TypedArray<String> keys = data->properties();
 	for(int i = 0; i < keys.size(); ++i)
 	{
 		String property_path = keys[i];
@@ -122,7 +131,7 @@ void _PropertySnapshot::sanitize(int sender, Ref<PropertyCache> property_cache)
 	_snapshot = sanitized;
 }
 
-Ref<_PropertySnapshot> _PropertySnapshot::extract(Array properties)
+Ref<_PropertySnapshot> _PropertySnapshot::extract(TypedArray<PropertyEntry> properties)
 {
 	Dictionary result = Dictionary();
 	for(int i = 0; i < properties.size(); ++i)
@@ -134,10 +143,11 @@ Ref<_PropertySnapshot> _PropertySnapshot::extract(Array properties)
 }
 
 void _PropertySnapshot::_bind_methods() {
-	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("as_dictionary"), &_PropertySnapshot::as_dictionary);
 	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("new", "p_snapshot"), &_PropertySnapshot::_new);
+	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("from_dictionary", "data"), &_PropertySnapshot::from_dictionary);
 	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("extract", "properties"), &_PropertySnapshot::extract);
 	
+	ClassDB::bind_method(D_METHOD("as_dictionary"), &_PropertySnapshot::as_dictionary);
 	ClassDB::bind_method(D_METHOD("set_value", "property_path", "data"), &_PropertySnapshot::set_value);
 	ClassDB::bind_method(D_METHOD("get_value", "property_path"), &_PropertySnapshot::get_value);
 	ClassDB::bind_method(D_METHOD("properties"), &_PropertySnapshot::properties);
@@ -149,6 +159,5 @@ void _PropertySnapshot::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("merge", "data"), &_PropertySnapshot::merge);
 	ClassDB::bind_method(D_METHOD("make_patch", "data"), &_PropertySnapshot::make_patch);
 	ClassDB::bind_method(D_METHOD("sanitize", "sender", "property_cache"), &_PropertySnapshot::sanitize);
-
 }
 

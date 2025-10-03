@@ -6,6 +6,13 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/variant/variant.hpp>
 
+Ref<RollbackFreshnessStore> RollbackFreshnessStore::_new()
+{
+	Ref<RollbackFreshnessStore> ref;
+	ref.instantiate();
+	return ref;
+}
+
 bool RollbackFreshnessStore::is_fresh(Node* node, int tick)
 {
 	if(!_data.has(tick))

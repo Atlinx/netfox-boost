@@ -8,6 +8,13 @@
 #include <godot_cpp/classes/multiplayer_api.hpp>
 #include <godot_cpp/classes/multiplayer_peer.hpp>
 
+Ref<_NetfoxLogger> _RollbackHistoryTransmitter::_logger;
+
+void _RollbackHistoryTransmitter::_static_init()
+{
+	_logger = _NetfoxLogger::for_netfox("_RollbackHistoryTransmitter");
+}
+
 int _RollbackHistoryTransmitter::get_earliest_input_tick()
 {
 	return _earliest_input_tick;
@@ -31,7 +38,7 @@ void _RollbackHistoryTransmitter::sync_settings(Node* p_root, bool p_enable_inpu
 	diff_ack_interval = p_diff_ack_interval;
 }
 
-void _RollbackHistoryTransmitter::configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, Ref<PeerVisibilityFilter> p_visibility_filter, Ref<PropertyCache> p_property_cache, HashSet<Node*> p_skipset)
+void _RollbackHistoryTransmitter::configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, PeerVisibilityFilter* p_visibility_filter, Ref<PropertyCache> p_property_cache, HashSet<Node*> p_skipset)
 {
 	_state_history = p_state_history;
 	_input_history = p_input_history;
@@ -358,24 +365,10 @@ void _RollbackHistoryTransmitter::_bind_methods() {
 
 	ClassDB::add_signal(get_class_static(), MethodInfo("_on_transmit_state", PropertyInfo(Variant::DICTIONARY, "state"), PropertyInfo(Variant::INT, "tick")));
 
-	ClassDB::bind_method(D_METHOD("_submit_input", "tick", "data"), 
-						 &_RollbackHistoryTransmitter::_submit_input,
-						 BIND_METHOD_RPC(MultiplayerAPI::RPC_MODE_ANY_PEER, MultiplayerPeer::TRANSFER_MODE_UNRELIABLE));
-
-	ClassDB::bind_method(D_METHOD("_submit_full_state", "data", "tick"), 
-						 &_RollbackHistoryTransmitter::_submit_full_state,
-						 BIND_METHOD_RPC(MultiplayerAPI::RPC_MODE_ANY_PEER, MultiplayerPeer::TRANSFER_MODE_UNRELIABLE_ORDERED));
-
-	ClassDB::bind_method(D_METHOD("_submit_diff_state", "data", "tick", "reference_tick"), 
-						 &_RollbackHistoryTransmitter::_submit_diff_state,
-						 BIND_METHOD_RPC(MultiplayerAPI::RPC_MODE_ANY_PEER, MultiplayerPeer::TRANSFER_MODE_UNRELIABLE_ORDERED));
-
-	ClassDB::bind_method(D_METHOD("_ack_full_state", "tick"), 
-						 &_RollbackHistoryTransmitter::_ack_full_state,
-						 BIND_METHOD_RPC(MultiplayerAPI::RPC_MODE_ANY_PEER, MultiplayerPeer::TRANSFER_MODE_RELIABLE));
-
-	ClassDB::bind_method(D_METHOD("_ack_diff_state", "tick"), 
-						 &_RollbackHistoryTransmitter::_ack_diff_state,
-						 BIND_METHOD_RPC(MultiplayerAPI::RPC_MODE_ANY_PEER, MultiplayerPeer::TRANSFER_MODE_UNRELIABLE_ORDERED));
+	ClassDB::bind_method(D_METHOD("_submit_input", "tick", "data"), &_RollbackHistoryTransmitter::_submit_input);
+	ClassDB::bind_method(D_METHOD("_submit_full_state", "data", "tick"), &_RollbackHistoryTransmitter::_submit_full_state);
+	ClassDB::bind_method(D_METHOD("_submit_diff_state", "data", "tick", "reference_tick"), &_RollbackHistoryTransmitter::_submit_diff_state);
+	ClassDB::bind_method(D_METHOD("_ack_full_state", "tick"), &_RollbackHistoryTransmitter::_ack_full_state);
+	ClassDB::bind_method(D_METHOD("_ack_diff_state", "tick"), &_RollbackHistoryTransmitter::_ack_diff_state);
 }
 

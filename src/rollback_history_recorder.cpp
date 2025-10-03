@@ -78,11 +78,8 @@ void _RollbackHistoryRecorder::record_state(int tick)
     
     for (int i = 0; i < recorded_state_props.size(); ++i) {
         Dictionary pe = recorded_state_props[i];
-        Variant node_variant = pe.get("node", Variant()); 
-        
-        Object* node_obj = node_variant;
-        
-        if (node_obj) {
+        Variant node_obj = pe.get("node", Variant()); 
+        if (Object::cast_to<Node>(node_obj)) {
             Variant mutation_result = network_rollback->call("is_mutated", node_obj, tick - 1);
             
             if (mutation_result.operator bool()) {
@@ -116,8 +113,7 @@ bool _RollbackHistoryRecorder::_should_record_tick(int tick)
 	Node* network_rollback = Utils::get_autoload("NetworkRollback");
 	
 	if (!network_rollback) {
-		ERR_FAIL_MSG("NetworkRollback autoload not found for mutation check.");
-		return false;
+		ERR_FAIL_V_MSG(false, "NetworkRollback autoload not found for mutation check.");
 	}
 
 	bool was_mutated = false;
@@ -150,8 +146,7 @@ bool _RollbackHistoryRecorder::_should_record_property(Ref<PropertyEntry> proper
 {
 	Node* network_rollback = Utils::get_autoload("NetworkRollback");
 	if (!network_rollback) {
-		ERR_FAIL_MSG("NetworkRollback autoload not found for property mutation check.");
-		return false;
+		ERR_FAIL_V_MSG(false, "NetworkRollback autoload not found for property mutation check.");
 	}
 	if (network_rollback->call("is_mutated", property_entry->node, tick - 1))
 		return true;
@@ -185,22 +180,22 @@ Array _RollbackHistoryRecorder::_get_state_props_to_record(int tick)
 	return filtered_props;
 }
 
-Array _RollbackHistoryRecorder::_get_recorded_state_props()
+TypedArray<PropertyEntry> _RollbackHistoryRecorder::_get_recorded_state_props()
 {
 	return _state_property_config->get_properties();
 }
 
-Array _RollbackHistoryRecorder::_get_owned_state_props()
+TypedArray<PropertyEntry> _RollbackHistoryRecorder::_get_owned_state_props()
 {
 	return _state_property_config->get_owned_properties();
 }
 
-Array _RollbackHistoryRecorder::_get_recorded_input_props()
+TypedArray<PropertyEntry> _RollbackHistoryRecorder::_get_recorded_input_props()
 {
 	return _input_property_config->get_owned_properties();
 }
 
-Array _RollbackHistoryRecorder::_get_owned_input_props()
+TypedArray<PropertyEntry> _RollbackHistoryRecorder::_get_owned_input_props()
 {
 	return _input_property_config->get_owned_properties();
 }

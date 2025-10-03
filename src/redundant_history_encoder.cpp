@@ -5,9 +5,11 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-void _RedundantHistoryEncoder::set_redundancy(int value)
+Ref<_NetfoxLogger> _RedundantHistoryEncoder::_logger;
+
+void _RedundantHistoryEncoder::_static_init()
 {
-	_redundancy = value;
+	 _logger = _NetfoxLogger::for_netfox("_RedundantHistoryEncoder");
 }
 
 int _RedundantHistoryEncoder::get_redundancy()

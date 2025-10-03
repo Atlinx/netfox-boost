@@ -15,7 +15,13 @@ class Utils : public RefCounted {
 
 public:
 	static Node* get_autoload(String autoload);
-	static bool is_instance_valid(Variant variant);
+	static bool is_instance_valid(const Variant &p_instance);
+
+	template <typename T>
+	static bool is_instance_valid(Ref<T> ref)
+	{
+		return ref.is_valid();
+	}
 };
 
 #endif // UTILS_H

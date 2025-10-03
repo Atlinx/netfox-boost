@@ -25,7 +25,7 @@ protected:
 	Dictionary _full_snapshot = Dictionary();
 	Dictionary _encoded_snapshot = Dictionary();
 
-	BiMap<int, String> _property_indexes;
+	_BiMap<int, String> _property_indexes;
 
 	uint8_t _version = 0;
 	bool _has_received = false;
@@ -37,6 +37,9 @@ public:
 	_DiffHistoryEncoder() = default;
 	~_DiffHistoryEncoder() override = default;
 
+	static void _static_init();
+	static Ref<_DiffHistoryEncoder> _new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
+
 	void add_properties(Array properties);
 	PackedByteArray encode(int tick, int reference_tick, Array properties);
 	Ref<_PropertySnapshot> decode(PackedByteArray data, Array properties);
@@ -46,6 +49,4 @@ public:
 	Dictionary get_encoded_snapshot();
 	Dictionary get_full_snapshot();
 	bool _ensure_property_idx(String property);
-
-	static Ref<_DiffHistoryEncoder> _new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
 };

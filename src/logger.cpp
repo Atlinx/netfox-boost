@@ -6,30 +6,34 @@
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/templates/local_vector.hpp>
 
-bool _NetfoxLogger::_static_initialized = false;
+_NetfoxLogger::LogLevel _NetfoxLogger::log_level;
+HashMap<String, _NetfoxLogger::LogLevel> _NetfoxLogger::module_log_level;
+HashMap<int, Vector<Callable>> _NetfoxLogger::_tags;
+Vector<Callable> _NetfoxLogger::_ordered_tags;
 
 void _NetfoxLogger::set_module_log_level(const Dictionary& p_log_levels) {
 	module_log_level.clear();
 	Array keys = p_log_levels.keys();
 	for (int i = 0; i < keys.size(); ++i) {
 		String key = keys[i];
-		module_log_level[key] = p_log_levels[key].operator int();
+		module_log_level[key] = (LogLevel) (int) p_log_levels[key];
 	}
 }
 
 Dictionary _NetfoxLogger::get_module_log_level() {
 	Dictionary dict;
-	for (const KeyValue<String, int>& E : module_log_level) {
-		dict[E.key] = E.value;
+	for (auto key_value : module_log_level) {
+		dict[key_value.key] = key_value.value;
 	}
 	return dict;
 }
 
-Ref<_NetfoxLogger> _new(String p_module, String p_name)
+Ref<_NetfoxLogger> _NetfoxLogger::_new(String p_module, String p_name)
 {
 	Ref<_NetfoxLogger> logger;
 	logger.instantiate();
-	logger->_init(p_module, p_name);
+	logger->module = p_module;
+	logger->name = p_name;
 	return logger;
 }
 
@@ -105,40 +109,29 @@ void _NetfoxLogger::free_tag(Callable tag)
 
 void _NetfoxLogger::_static_init()
 {
-	if (_static_initialized)
-		return;
-	_static_initialized = true;
-	log_level = ProjectSettings::get_singleton()->get_setting("netfox/logging/log_level", DEFAULT_LOG_LEVEL).operator int();
+	log_level = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/log_level", DEFAULT_LOG_LEVEL);
 
-	module_log_level["netfox"] = ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_log_level", DEFAULT_LOG_LEVEL).operator int();
-	module_log_level["netfox.noray"] = ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_noray_log_level", DEFAULT_LOG_LEVEL).operator int();
-	module_log_level["netfox.extras"] = ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_extras_log_level", DEFAULT_LOG_LEVEL).operator int();
+	module_log_level["netfox"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_log_level", DEFAULT_LOG_LEVEL);
+	module_log_level["netfox.noray"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_noray_log_level", DEFAULT_LOG_LEVEL);
+	module_log_level["netfox.extras"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_extras_log_level", DEFAULT_LOG_LEVEL);
 }
 
-void _NetfoxLogger::_init(String p_module, String p_name)
+bool _NetfoxLogger::_check_log_level(LogLevel level)
 {
-	_static_init();
-
-	module = p_module;
-	name = p_name;
-}
-
-bool _NetfoxLogger::_check_log_level(int level)
-{
-	int cmp_level = log_level;
+	LogLevel cmp_level = log_level;
 	if (level < cmp_level) {
 		return false;
 	}
 
 	if (module_log_level.has(module)) {
-		int module_level = module_log_level[module];
+		LogLevel module_level = module_log_level[module];
 		return level >= module_level;
 	}
 
 	return true;
 }
 
-String _NetfoxLogger::_format_text(String text, Array values, int level)
+String _NetfoxLogger::_format_text(String text, Array values, LogLevel level)
 {
 	level = CLAMP(level, LOG_MIN, LOG_MAX);
 
@@ -169,7 +162,7 @@ String _NetfoxLogger::_format_text(String text, Array values, int level)
 	return String("").join(result);
 }
 
-void _NetfoxLogger::_log_text(String text, Array values, int level)
+void _NetfoxLogger::_log_text(String text, Array values, LogLevel level)
 {
 	if(_check_log_level(level))
 	{

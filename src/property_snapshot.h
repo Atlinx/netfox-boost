@@ -29,15 +29,15 @@ public:
 	_PropertySnapshot() = default;
 	~_PropertySnapshot() override = default;
 
-	Dictionary as_dictionary();
-
+	static void _static_init();
 	static Ref<_PropertySnapshot> from_dictionary(Dictionary data);
-	static Ref<_PropertySnapshot> extract(Array properties);
+	static Ref<_PropertySnapshot> extract(TypedArray<PropertyEntry> properties);
 	static Ref<_PropertySnapshot> _new(Dictionary p_snapshot = Dictionary());
 	
+	Dictionary as_dictionary();
 	void set_value(String property_path, Variant data);
 	Variant get_value(String property_path);
-	Array properties();
+	TypedArray<String> _PropertySnapshot::properties();
 	bool has(String property_path);
 	int size();
 	bool equals(Ref<_PropertySnapshot> other);

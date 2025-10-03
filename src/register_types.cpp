@@ -18,6 +18,7 @@
 #include "snapshot_history_encoder.h"
 #include "rollback_history_recorder.h"
 #include "rollback_history_transmitter.h"
+#include "set.h"
 
 using namespace godot;
 
@@ -39,6 +40,16 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(_SnapshotHistoryEncoder);
 	GDREGISTER_CLASS(_RollbackHistoryRecorder);
 	GDREGISTER_CLASS(_RollbackHistoryTransmitter);
+	GDREGISTER_CLASS(_Set);
+
+	_NetfoxLogger::_static_init();
+	PropertyCache::_static_init();
+	PropertyEntry::_static_init();
+	_PropertySnapshot::_static_init();
+	_DiffHistoryEncoder::_static_init();
+	_RedundantHistoryEncoder::_static_init();
+	_SnapshotHistoryEncoder::_static_init();
+	_RollbackHistoryTransmitter::_static_init();	
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {

@@ -6,6 +6,13 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
+Ref<_NetfoxLogger> PropertyEntry::_logger;
+
+void PropertyEntry::_static_init()
+{
+	_logger = _NetfoxLogger::for_netfox("PropertyEntry");
+}
+
 Variant PropertyEntry::get_value()
 {
 	return node->get_indexed(property);
@@ -38,7 +45,10 @@ String PropertyEntry::to_string() const
 
 Ref<PropertyEntry> PropertyEntry::parse(Node* root, String path)
 {
-	Ref<PropertyEntry> result;
+	if (_logger.is_null())
+		_logger = _NetfoxLogger::for_netfox("PropertyEntry");
+
+		Ref<PropertyEntry> result;
 	result.instantiate();
 	result->node = root->get_node<Node>(NodePath(path));
 	result->property = path.erase(0, path.find(":") + 1);
@@ -61,7 +71,7 @@ String PropertyEntry::make_path(Node* root, Variant node, String property)
 	}
 	else if(Object::cast_to<Node>(node))
 	{
-		Node* _node = Object::cast_to<Node>(_node);
+		Node* _node = Object::cast_to<Node>(node);
 		node_path = String(root->get_path_to(_node));
 	}
 	else
@@ -79,10 +89,10 @@ String PropertyEntry::make_path(Node* root, Variant node, String property)
 }
 
 void PropertyEntry::_bind_methods() {
+	ClassDB::bind_static_method("PropertyEntry", D_METHOD("parse", "root", "path"), &PropertyEntry::parse);
+	ClassDB::bind_static_method("PropertyEntry", D_METHOD("make_path", "root", "node", "property"), &PropertyEntry::make_path);
 	ClassDB::bind_method(D_METHOD("get_value"), &PropertyEntry::get_value);
 	ClassDB::bind_method(D_METHOD("set_value", "value"), &PropertyEntry::set_value);
 	ClassDB::bind_method(D_METHOD("is_valid"), &PropertyEntry::is_valid);
-	ClassDB::bind_method(D_METHOD("parse", "root", "path"), &PropertyEntry::parse);
-	ClassDB::bind_method(D_METHOD("make_path", "root", "node", "property"), &PropertyEntry::make_path);
 }
 

@@ -53,8 +53,8 @@ public:
 
 // Shared utils, extract later
 	bool _should_record_property(Ref<PropertyEntry> property_entry, int tick);
-	Array _get_recorded_state_props();
-	Array _get_owned_state_props();
-	Array _get_recorded_input_props();
-	Array _get_owned_input_props();
+	TypedArray<PropertyEntry> _get_recorded_state_props();
+	TypedArray<PropertyEntry> _get_owned_state_props();
+	TypedArray<PropertyEntry> _get_recorded_input_props();
+	TypedArray<PropertyEntry> _get_owned_input_props();
 };

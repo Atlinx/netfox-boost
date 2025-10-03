@@ -5,7 +5,7 @@
 using namespace godot;
 
 template <typename Key, typename Value>
-class BiMap {
+class _BiMap {
 private:
 	// Map 1: Key -> Value
 	HashMap<Key, Value> map_kv; 
@@ -14,8 +14,8 @@ private:
 	HashMap<Value, Key> map_vk; 
 
 public:
-	BiMap() = default;
-	~BiMap() override = default;
+	_BiMap() = default;
+	~_BiMap() = default;
 
 	void insert(const Key& k, const Value& v) {
 		// Ensure one-to-one constraint: remove existing entries first
@@ -30,8 +30,8 @@ public:
 		if (map_kv.has(k)) {
 			// Retrieve value before erasing the key from map_kv
 			const Value& v = map_kv.get(k); 
-			map_vk.remove(v);
-			map_kv.remove(k);
+			map_kv.remove(map_kv.find(k));
+			map_vk.remove(map_vk.find(v));
 		}
 	}
 
@@ -39,8 +39,8 @@ public:
 		if (map_vk.has(v)) {
 			// Retrieve key before erasing the value from map_vk
 			const Key& k = map_vk.get(v);
-			map_kv.remove(k);
-			map_vk.remove(v);
+			map_kv.remove(map_kv.find(k));
+			map_vk.remove(map_vk.find(v));
 		}
 	}
 
