@@ -20,7 +20,6 @@ using namespace godot;
 
 class _RollbackHistoryTransmitter : public Node {
 	GDCLASS(_RollbackHistoryTransmitter, Node);
-public:
 
 protected:
 	Node* root;
