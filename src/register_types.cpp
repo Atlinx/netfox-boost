@@ -30,9 +30,9 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	}
 	GDREGISTER_CLASS(NetfoxBoost);
 	GDREGISTER_CLASS(_NetfoxLogger);
+	GDREGISTER_CLASS(PropertyEntry);
 	GDREGISTER_CLASS(PropertyCache);
 	GDREGISTER_CLASS(_PropertyConfig);
-	GDREGISTER_CLASS(PropertyEntry);
 	GDREGISTER_CLASS(_HistoryBuffer);
 	GDREGISTER_CLASS(_PropertyHistoryBuffer);
 	GDREGISTER_CLASS(_PropertySnapshot);

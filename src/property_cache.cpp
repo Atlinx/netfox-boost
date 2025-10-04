@@ -8,10 +8,7 @@
 Ref<_NetfoxLogger> PropertyCache::_logger;
 
 Ref<PropertyCache> PropertyCache::new_(Node* p_root)
-{
-	if (_logger.is_null())
-		_logger = _NetfoxLogger::for_netfox("PropertyCache");
-	
+{	
 	Ref<PropertyCache> ref;
 	ref.instantiate();
 	ref->root = p_root;

@@ -28,14 +28,3 @@ bool Utils::is_instance_valid(const Variant &p_instance)
 	}
 	return p_instance.get_validated_object() != nullptr;
 }
-
-String Utils::vformatv(const String &p_text, const Array array) {
-	Variant args[sizeof...(p_args) + 1] = { p_args..., Variant() }; // +1 makes sure zero sized arrays are also supported.
-
-	bool error = false;
-	String fmt = p_text.sprintf(Span(args, sizeof...(p_args)), &error);
-
-	ERR_FAIL_COND_V_MSG(error, String(), String("Formatting error in string \"") + p_text + "\": " + fmt + ".");
-
-	return fmt;
-}

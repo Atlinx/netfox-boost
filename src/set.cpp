@@ -44,9 +44,11 @@ Array _Set::values() const {
   Array res;
   res.resize(_data.size());
   int i = 0;
-  for (auto data : _data)
-    res[i] = data;
+  for (auto data : _data) 
+	{
+		res[i] = data;
     ++i;
+	}
 	return res;
 }
 
@@ -92,6 +94,7 @@ String _Set::_to_string() const {
 }
 
 bool _Set::_iter_init(Array p_iter) {
+	print_line("_iter_init: ", p_iter);
 	if (_data.is_empty()) {
 		return false;
 	}
@@ -100,21 +103,22 @@ bool _Set::_iter_init(Array p_iter) {
 }
 
 bool _Set::_iter_next(Array p_iter) {
+	print_line("_iter_next: ", p_iter);
   int curr_idx = p_iter[0];
-	if (curr_idx >= 0 && curr_idx < _data.size()) {
+	if (curr_idx >= 0 && curr_idx < _data.size() - 1) {
 		p_iter[0] = curr_idx + 1;
     return true;
 	}
-  p_iter[0] = -1;
   return false;
 }
 
-Variant _Set::_iter_get(Array p_iter) const {
-  int curr_idx = p_iter[0];
+Variant _Set::_iter_get(int p_iter) const {
+	print_line("_iter_get: ", p_iter);
+  int curr_idx = p_iter;
   if (curr_idx >= 0 && curr_idx < _data.size()) {
     auto it = _data.begin();
     while (curr_idx > 0) {
-      curr_idx--;
+      --curr_idx;
       ++it;
     }
     return *it;

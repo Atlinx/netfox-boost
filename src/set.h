@@ -39,7 +39,7 @@ public:
 	
 	bool _iter_init(Array p_iter);
 	bool _iter_next(Array p_iter);
-	Variant _iter_get(Array p_iter) const;
+	Variant _iter_get(int p_iter) const;
 
 	String _to_string() const;
 };

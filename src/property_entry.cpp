@@ -68,9 +68,6 @@ String PropertyEntry::to_string() const
 
 Ref<PropertyEntry> PropertyEntry::parse(Node* root, String path)
 {
-	if (_logger.is_null())
-		_logger = _NetfoxLogger::for_netfox("PropertyEntry");
-
 	Ref<PropertyEntry> result;
 	result.instantiate();
 	result->node = root->get_node<Node>(NodePath(path));
