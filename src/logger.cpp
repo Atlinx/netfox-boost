@@ -187,11 +187,20 @@ void _NetfoxLogger::error(String text, Array values)
 
 void _NetfoxLogger::_bind_methods() 
 {
-	log_level = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/log_level", DEFAULT_LOG_LEVEL);
-
-	module_log_level["netfox"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_log_level", DEFAULT_LOG_LEVEL);
-	module_log_level["netfox.noray"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_noray_log_level", DEFAULT_LOG_LEVEL);
-	module_log_level["netfox.extras"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_extras_log_level", DEFAULT_LOG_LEVEL);
+	if (ProjectSettings::get_singleton())
+	{
+		auto project_settings = ProjectSettings::get_singleton();
+		log_level = (LogLevel) (int) project_settings->get_setting("netfox/logging/log_level", DEFAULT_LOG_LEVEL);
+		module_log_level["netfox"] = (LogLevel) (int) project_settings->get_setting("netfox/logging/netfox_log_level", DEFAULT_LOG_LEVEL);
+		module_log_level["netfox.noray"] = (LogLevel) (int) project_settings->get_setting("netfox/logging/netfox_noray_log_level", DEFAULT_LOG_LEVEL);
+		module_log_level["netfox.extras"] = (LogLevel) (int) project_settings->get_setting("netfox/logging/netfox_extras_log_level", DEFAULT_LOG_LEVEL);
+	} else {
+		log_level = DEFAULT_LOG_LEVEL;
+		module_log_level["netfox"] = DEFAULT_LOG_LEVEL;
+		module_log_level["netfox.noray"] = DEFAULT_LOG_LEVEL;
+		module_log_level["netfox.extras"] = DEFAULT_LOG_LEVEL;
+		print_error("_NetfoxLogger: ProjectSettings singleton does not exist yet.");
+	}
 
 	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("new_", "p_module", "p_name"), &_NetfoxLogger::new_);
 

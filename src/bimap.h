@@ -1,82 +1,63 @@
 #pragma once
 
-#include <godot_cpp/templates/hash_map.hpp>
+#include "internal_bimap.h"
+
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/variant/variant.hpp>
+#include <godot_cpp/variant/array.hpp>
+#include <godot_cpp/templates/hash_set.hpp>
+#include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/variant/variant.hpp>
 
 using namespace godot;
 
-template <typename Key, typename Value>
-class _BiMap {
-private:
-	// Map 1: Key -> Value
-	HashMap<Key, Value> map_kv; 
+class _BiMapIterator : public RefCounted {
+	GDCLASS(_BiMapIterator, RefCounted);
 
-	// Map 2: Value -> Key (the inverse map)
-	HashMap<Value, Key> map_vk; 
+	protected:
+		static void _bind_methods();
+
+	public:
+		_BiMapIterator() = default;
+		~_BiMapIterator() override = default;
+
+		InternalBiMap<Variant, Variant, VariantHasher>::ConstIterator iterator;
+};
+
+class _BiMap : public RefCounted {
+	GDCLASS(_BiMap, RefCounted);
+
+private:
+	InternalBiMap<Variant, Variant, VariantHasher> _data;
+
+protected:
+	static void _bind_methods();
 
 public:
 	_BiMap() = default;
-	~_BiMap() = default;
+	~_BiMap() override = default;
 
-	void insert(const Key& k, const Value& v) {
-		// Ensure one-to-one constraint: remove existing entries first
-		remove_by_key(k);
-		remove_by_value(v);
+	static Ref<_BiMap> of(const Dictionary& p_items);
+	static Ref<_BiMap> new_();
 
-		map_kv.insert(k, v);
-		map_vk.insert(v, k);
-	}
-
-	void remove_by_key(const Key& k) {
-		if (map_kv.has(k)) {
-			// Retrieve value before erasing the key from map_kv
-			const Value& v = map_kv.get(k); 
-			map_kv.remove(map_kv.find(k));
-			map_vk.remove(map_vk.find(v));
-		}
-	}
-
-	void remove_by_value(const Value& v) {
-		if (map_vk.has(v)) {
-			// Retrieve key before erasing the value from map_vk
-			const Key& k = map_vk.get(v);
-			map_kv.remove(map_kv.find(k));
-			map_vk.remove(map_vk.find(v));
-		}
-	}
-
-	// Lookup functions
-	const Value& get_by_key(const Key& k) const {
-		// Warning: This assumes the key exists, similar to HashMap::get(). 
-		// Use has_key() first for safety.
-		return map_kv.get(k); 
-	}
+	void put(const Variant& p_key, const Variant& p_value);
+	Variant get_by_key(const Variant& p_key) const;
+	Variant get_by_value(const Variant& p_value) const;
+	bool has_key(const Variant& p_key) const;
+	bool has_value(const Variant& p_value) const;
+	bool is_empty() const;
+	bool erase_key(const Variant& p_key);
+	bool erase_value(const Variant& p_value);
+	int size() const;
+	void clear();
+	Array keys() const;
+	Array values() const;
 	
-	const Key& get_by_value(const Value& v) const {
-		// Warning: This assumes the value exists. Use has_value() first for safety.
-		return map_vk.get(v);
-	}
-	
-	// New utility functions:
+	bool _iter_init(Array p_iter) const;
+	bool _iter_next(Array p_iter) const;
+	Variant _iter_get(Ref<_BiMapIterator> p_iter) const;
 
-	/**
-	 * @brief Returns the number of elements (key-value pairs) in the map.
-	 */
-	int size() const {
-		// Both maps should always have the same size.
-		return map_kv.size();
-	}
-
-	/**
-	 * @brief Checks if the map contains the specified key.
-	 */
-	bool has_key(const Key& k) const {
-		return map_kv.has(k);
-	}
-
-	/**
-	 * @brief Checks if the map contains the specified value.
-	 */
-	bool has_value(const Value& v) const {
-		return map_vk.has(v);
-	}
+	String _to_string() const;
 };

@@ -19,11 +19,6 @@
 			<description>
 			</description>
 		</method>
-		<method name="new" qualifiers="static">
-			<return type="RollbackFreshnessStore" />
-			<description>
-			</description>
-		</method>
 		<method name="notify_processed">
 			<return type="void" />
 			<param index="0" name="node" type="Node" />

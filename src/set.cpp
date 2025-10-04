@@ -106,7 +106,7 @@ String _Set::_to_string() const
 	return "Set: [" + String(", ").join(values()) + "]";
 }
 
-bool _Set::_iter_init(Array p_iter) 
+bool _Set::_iter_init(Array p_iter) const
 {
 	if (_data.is_empty()) {
 		return false;
@@ -118,7 +118,7 @@ bool _Set::_iter_init(Array p_iter)
   return true;
 }
 
-bool _Set::_iter_next(Array p_iter) 
+bool _Set::_iter_next(Array p_iter) const
 {
 	Ref<_SetIterator> iterator = p_iter[0];
 	++iterator->iterator;

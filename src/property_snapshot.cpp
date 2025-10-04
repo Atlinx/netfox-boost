@@ -132,7 +132,7 @@ Ref<_PropertySnapshot> _PropertySnapshot::extract(TypedArray<PropertyEntry> prop
 	for(int i = 0; i < properties.size(); ++i)
 	{
 		Ref<PropertyEntry> property = properties[i];
-		result[property->to_string()] = property->get_value();
+		result[property->_to_string()] = property->get_value();
 	}
 	return from_dictionary(result);
 }

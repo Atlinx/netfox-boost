@@ -20,6 +20,7 @@
 #include "rollback_history_transmitter.h"
 #include "rollback_freshness_store.h"
 #include "set.h"
+#include "bimap.h"
 
 using namespace godot;
 
@@ -45,6 +46,8 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(RollbackFreshnessStore);
 	GDREGISTER_CLASS(_SetIterator);
 	GDREGISTER_CLASS(_Set);
+	GDREGISTER_CLASS(_BiMapIterator);
+	GDREGISTER_CLASS(_BiMap);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {

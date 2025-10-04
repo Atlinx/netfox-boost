@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="_BiMap" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="clear">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="erase_key">
+			<return type="bool" />
+			<param index="0" name="p_key" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="erase_value">
+			<return type="bool" />
+			<param index="0" name="p_value" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="get_by_key" qualifiers="const">
+			<return type="Variant" />
+			<param index="0" name="p_key" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="get_by_value" qualifiers="const">
+			<return type="Variant" />
+			<param index="0" name="p_value" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="has_key" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="p_key" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="has_value" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="p_value" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="is_empty" qualifiers="const">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="keys" qualifiers="const">
+			<return type="Array" />
+			<description>
+			</description>
+		</method>
+		<method name="of" qualifiers="static">
+			<return type="_BiMap" />
+			<param index="0" name="items" type="Dictionary" />
+			<description>
+			</description>
+		</method>
+		<method name="put">
+			<return type="void" />
+			<param index="0" name="p_key" type="Variant" />
+			<param index="1" name="p_value" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="size" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="values" qualifiers="const">
+			<return type="Array" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<class name="NetfoxBoost" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+<class name="NetfoxBoost" inherits="Node" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
 		Contains functiosn for repetitive NetFox tasks.
 	</brief_description>
@@ -9,12 +9,34 @@
 	<tutorials>
 	</tutorials>
 	<methods>
-		<method name="print_type" qualifiers="const">
+		<method name="print_type">
 			<return type="void" />
 			<param index="0" name="variant" type="Variant" />
 			<description>
 				Print the type of the variant.
 			</description>
 		</method>
+		<method name="rpc_receive">
+			<return type="void" />
+			<param index="0" name="msg" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="test_rpc">
+			<return type="void" />
+			<param index="0" name="msg" type="String" />
+			<description>
+			</description>
+		</method>
 	</methods>
+	<members>
+		<member name="my_string" type="String" setter="set_my_string" getter="get_my_string" default="&quot;&quot;">
+		</member>
+	</members>
+	<signals>
+		<signal name="my_signal_no_args">
+			<description>
+			</description>
+		</signal>
+	</signals>
 </class>

@@ -6,7 +6,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-void _RollbackHistoryRecorder::configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, Ref<PropertyCache> p_property_cache, HashSet<Node*> p_skipset)
+void _RollbackHistoryRecorder::configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, Ref<PropertyCache> p_property_cache, Ref<_Set> p_skipset)
 {
 	_state_history = p_state_history;
 	_input_history = p_input_history;
@@ -134,7 +134,7 @@ bool _RollbackHistoryRecorder::_should_record_property(Ref<PropertyEntry> proper
 	}
 	if (network_rollback->call("is_mutated", property_entry->node, tick - 1))
 		return true;
-	if (_skipset.has(property_entry->node))
+	if (_skipset->has(property_entry->node))
 		return false;
 	return true;
 }
@@ -148,7 +148,7 @@ Array _RollbackHistoryRecorder::_get_state_props_to_record(int tick)
 	Array recorded_state_props = _get_recorded_state_props();
 
 	// Assuming _skipset is a godot::HashSet (which has .is_empty())
-	if (_skipset.is_empty()) {
+	if (_skipset->is_empty()) {
 		return recorded_state_props;
 	}
 
@@ -184,7 +184,7 @@ TypedArray<PropertyEntry> _RollbackHistoryRecorder::_get_owned_input_props()
 }
 
 void _RollbackHistoryRecorder::_bind_methods() {
-	// ClassDB::bind_method(D_METHOD("configure", "p_state_history", "p_input_history", "p_state_property_config", "p_input_property_config", "p_property_cache", "p_skipset"), &_RollbackHistoryRecorder::configure);
+	ClassDB::bind_method(D_METHOD("configure", "p_state_history", "p_input_history", "p_state_property_config", "p_input_property_config", "p_property_cache", "p_skipset"), &_RollbackHistoryRecorder::configure);
 	ClassDB::bind_method(D_METHOD("set_latest_state_tick", "p_latest_state_tick"), &_RollbackHistoryRecorder::set_latest_state_tick);
 	ClassDB::bind_method(D_METHOD("apply_state", "tick"), &_RollbackHistoryRecorder::apply_state);
 	ClassDB::bind_method(D_METHOD("apply_display_state"), &_RollbackHistoryRecorder::apply_display_state);

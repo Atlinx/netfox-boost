@@ -5,6 +5,7 @@
 #include "property_config.h"
 #include "property_history_buffer.h"
 #include "property_snapshot.h"
+#include "set.h"
 
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/array.hpp>
@@ -30,7 +31,7 @@ protected:
 	Ref<PropertyCache> _property_cache;
 
 	int _latest_state_tick;
-	HashSet<Node*> _skipset;
+	Ref<_Set> _skipset;
 
 	static void _bind_methods();
 
@@ -38,7 +39,7 @@ public:
 	_RollbackHistoryRecorder() = default;
 	~_RollbackHistoryRecorder() override = default;
 
-	void configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, Ref<PropertyCache> p_property_cache, HashSet<Node*> p_skipset);
+	void configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, Ref<PropertyCache> p_property_cache, Ref<_Set> p_skipset);
 
 	void set_latest_state_tick(int p_latest_state_tick);
 	void apply_state(int tick);

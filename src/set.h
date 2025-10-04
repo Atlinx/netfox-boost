@@ -50,8 +50,8 @@ public:
 	Variant max() const;
 	bool equals(const Ref<_Set>& p_other) const;
 	
-	bool _iter_init(Array p_iter);
-	bool _iter_next(Array p_iter);
+	bool _iter_init(Array p_iter) const;
+	bool _iter_next(Array p_iter) const;
 	Variant _iter_get(Ref<_SetIterator> p_iter) const;
 
 	String _to_string() const;

@@ -5,7 +5,7 @@
 #include "logger.h"
 #include "property_history_buffer.h"
 #include "property_snapshot.h"
-#include "bimap.h"
+#include "internal_bimap.h"
 
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/array.hpp>
@@ -25,7 +25,7 @@ protected:
 	Dictionary _full_snapshot = Dictionary();
 	Dictionary _encoded_snapshot = Dictionary();
 
-	_BiMap<int, String> _property_indexes;
+	InternalBiMap<int, String> _property_indexes;
 
 	uint8_t _version = 0;
 	bool _has_received = false;

@@ -35,7 +35,7 @@ Array _SnapshotHistoryEncoder::encode(int tick, TypedArray<PropertyEntry> proper
 	for(int i=0; i<properties.size(); i+=1)
 	{
 		Ref<PropertyEntry> property_entry = properties[i];
-		data[i] = snapshot->get_value(property_entry->to_string());
+		data[i] = snapshot->get_value(property_entry->_to_string());
 	}
 	data.append(_version);
 
@@ -70,7 +70,7 @@ Ref<_PropertySnapshot> _SnapshotHistoryEncoder::decode(Array data, TypedArray<Pr
 	for(int i=0; i< Math::min(data.size(), properties.size()); i+=1)
 	{
 		Ref<PropertyEntry> entry = properties[i];
-		result->set_value(entry->to_string(), data[i]);
+		result->set_value(entry->_to_string(), data[i]);
 	}
 
 	_has_received = true;

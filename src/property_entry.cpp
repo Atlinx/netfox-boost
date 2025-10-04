@@ -61,7 +61,7 @@ bool PropertyEntry::is_valid()
 	return false;
 }
 
-String PropertyEntry::to_string() const
+String PropertyEntry::_to_string() const
 {
 	return path;
 }
@@ -127,6 +127,7 @@ void PropertyEntry::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_value"), &PropertyEntry::get_value);
 	ClassDB::bind_method(D_METHOD("set_value", "value"), &PropertyEntry::set_value);
 	ClassDB::bind_method(D_METHOD("is_valid"), &PropertyEntry::is_valid);
+	ClassDB::bind_method(D_METHOD("_to_string"), &PropertyEntry::_to_string);
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "path"), "set_path", "get_path");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_NODE_TYPE, "Node"), "set_node", "get_node");

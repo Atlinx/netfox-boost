@@ -12,6 +12,18 @@
 			<description>
 			</description>
 		</method>
+		<method name="configure">
+			<return type="void" />
+			<param index="0" name="p_input_history" type="_PropertyHistoryBuffer" />
+			<param index="1" name="p_state_property_config" type="_PropertyHistoryBuffer" />
+			<param index="2" name="p_input_property_config" type="_PropertyConfig" />
+			<param index="3" name="p_visibility_filter" type="_PropertyConfig" />
+			<param index="4" name="p_property_cache" type="PeerVisibilityFilter" />
+			<param index="5" name="p_skipset" type="PropertyCache" />
+			<param index="6" name="_unnamed_arg6" type="_Set" />
+			<description>
+			</description>
+		</method>
 		<method name="get_earliest_input_tick">
 			<return type="int" />
 			<description>

@@ -25,7 +25,7 @@ void _DiffHistoryEncoder::add_properties(Array properties)
 	for(int i = 0; i < properties.size(); ++i)
 	{
 		Ref<PropertyEntry> property_entry = properties[i];
-		bool is_new = _ensure_property_idx(property_entry->to_string());
+		bool is_new = _ensure_property_idx(property_entry->_to_string());
 		has_new_properties = has_new_properties || is_new;
 	}
 

@@ -22,15 +22,18 @@ protected:
 
 	static Ref<_NetfoxLogger> _logger;
 	static void _bind_methods();
-	
+
 public:
 	PropertyCache() = default;
 	~PropertyCache() override = default;
+
+	static Ref<PropertyCache> new_(Node* p_root);
 
 	Ref<PropertyEntry> get_entry(String path);
 	TypedArray<PropertyEntry> gd_properties();
 	Vector<Ref<PropertyEntry>> properties();
 	void clear();
 
-	static Ref<PropertyCache> new_(Node* p_root);
+	Node* get_root() const;
+	void set_root(Node* p_root);
 };

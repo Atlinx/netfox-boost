@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="_PropertyHistoryBuffer" inherits="_HistoryBuffer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="get_history">
+			<return type="_PropertySnapshot" />
+			<param index="0" name="tick" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="get_snapshot">
+			<return type="_PropertySnapshot" />
+			<param index="0" name="tick" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="merge">
+			<return type="void" />
+			<param index="0" name="data" type="_PropertySnapshot" />
+			<param index="1" name="tick" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="set_snapshot">
+			<return type="void" />
+			<param index="0" name="tick" type="int" />
+			<param index="1" name="data" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="trim">
+			<return type="void" />
+			<param index="0" name="earliest_tick_to_keep" type="int" default="-1" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

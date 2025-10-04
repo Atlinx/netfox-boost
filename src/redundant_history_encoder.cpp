@@ -50,7 +50,7 @@ Array _RedundantHistoryEncoder::encode(int tick, TypedArray<PropertyEntry> prope
 		for(int i = 0; i < properties.size(); ++i)
 		{
 			Ref<PropertyEntry> property = properties[i];
-			data.append(snapshot->get_value(property->to_string()));
+			data.append(snapshot->get_value(property->_to_string()));
 		}
 	}
 
@@ -92,7 +92,7 @@ TypedArray<_PropertySnapshot> _RedundantHistoryEncoder::decode(Array data, Typed
 
 		Ref<_PropertySnapshot> snapshot = result[offset_idx];
 		Ref<PropertyEntry> property_entry = properties[prop_idx];
-		snapshot->set_value(property_entry->to_string(), data[i]);
+		snapshot->set_value(property_entry->_to_string(), data[i]);
 	}
 
 	_has_received = true;

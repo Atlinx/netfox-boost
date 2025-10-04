@@ -33,7 +33,7 @@ void _RollbackHistoryTransmitter::sync_settings(Node* p_root, bool p_enable_inpu
 	diff_ack_interval = p_diff_ack_interval;
 }
 
-void _RollbackHistoryTransmitter::configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, PeerVisibilityFilter* p_visibility_filter, Ref<PropertyCache> p_property_cache, HashSet<Node*> p_skipset)
+void _RollbackHistoryTransmitter::configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, PeerVisibilityFilter* p_visibility_filter, Ref<PropertyCache> p_property_cache, Ref<_Set> p_skipset)
 {
 	_state_history = p_state_history;
 	_input_history = p_input_history;
@@ -133,7 +133,7 @@ void _RollbackHistoryTransmitter::transmit_state(int tick)
 		Ref<PropertyEntry> property = props[i];
 		if(_should_broadcast(property, tick))
 		{
-			full_state->set_value(property->to_string(), property->get_value());
+			full_state->set_value(property->_to_string(), property->get_value());
 		}
 	}
 
@@ -215,7 +215,7 @@ bool _RollbackHistoryTransmitter::_should_broadcast(Ref<PropertyEntry> property,
 	// we check first
 	if(network_rollback->call("is_mutated", property->node, tick - 1))
 		return true;
-	if(_skipset.has(property->node))
+	if(_skipset->has(property->node))
 		return false;
 	if(network_rollback->call("is_rollback_aware", property->node))
 		return network_rollback->call("is_simulated", property->node);
@@ -348,10 +348,44 @@ TypedArray<PropertyEntry> _RollbackHistoryTransmitter::_get_owned_input_props()
 	return _input_property_config->get_owned_properties();
 }
 
+_RollbackHistoryTransmitter::_RollbackHistoryTransmitter()
+{
+	Dictionary dict;
+	dict["rpc_mode"] = MultiplayerAPI::RPC_MODE_ANY_PEER;
+	dict["transfer_mode"] = MultiplayerPeer::TRANSFER_MODE_UNRELIABLE;
+	dict["call_local"] = false;
+	rpc_config("_submit_input", dict);
+	
+	dict.clear();
+	dict["rpc_mode"] = MultiplayerAPI::RPC_MODE_ANY_PEER;
+	dict["transfer_mode"] = MultiplayerPeer::TRANSFER_MODE_UNRELIABLE_ORDERED;
+	dict["call_local"] = false;
+	rpc_config("_submit_full_state", dict);
+	
+	dict.clear();
+	dict["rpc_mode"] = MultiplayerAPI::RPC_MODE_ANY_PEER;
+	dict["transfer_mode"] = MultiplayerPeer::TRANSFER_MODE_UNRELIABLE_ORDERED;
+	dict["call_local"] = false;
+	rpc_config("_submit_diff_state", dict);
+	
+	dict.clear();
+	dict["rpc_mode"] = MultiplayerAPI::RPC_MODE_ANY_PEER;
+	dict["transfer_mode"] = MultiplayerPeer::TRANSFER_MODE_RELIABLE;
+	dict["call_local"] = false;
+	rpc_config("_ack_full_state", dict);
+	
+	dict.clear();
+	dict["rpc_mode"] = MultiplayerAPI::RPC_MODE_ANY_PEER;
+	dict["transfer_mode"] = MultiplayerPeer::TRANSFER_MODE_UNRELIABLE_ORDERED;
+	dict["call_local"] = false;
+	rpc_config("_ack_diff_state", dict);
+}
+
 void _RollbackHistoryTransmitter::_bind_methods() 
 {
 	_logger = _NetfoxLogger::for_netfox("_RollbackHistoryTransmitter");
 
+	ClassDB::bind_method(D_METHOD("configure", "p_input_history", "p_state_property_config", "p_input_property_config", "p_visibility_filter", "p_property_cache", "p_skipset"), &_RollbackHistoryTransmitter::configure);
 	ClassDB::bind_method(D_METHOD("get_earliest_input_tick"), &_RollbackHistoryTransmitter::get_earliest_input_tick);
 	ClassDB::bind_method(D_METHOD("get_latest_state_tick"), &_RollbackHistoryTransmitter::get_latest_state_tick);
 	ClassDB::bind_method(D_METHOD("set_predicted_tick", "p_is_predicted_tick"), &_RollbackHistoryTransmitter::set_predicted_tick);

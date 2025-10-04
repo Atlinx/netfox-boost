@@ -9,6 +9,7 @@
 #include "redundant_history_encoder.h"
 #include "snapshot_history_encoder.h"
 #include "diff_history_encoder.h"
+#include "set.h"
 
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/array.hpp>
@@ -36,7 +37,7 @@ protected:
 	Ref<_PropertyConfig> _input_property_config;
 
 	Ref<PropertyCache> _property_cache;
-	HashSet<Node*> _skipset;
+	Ref<_Set> _skipset;
 
 // Collaborators
 	Ref<_RedundantHistoryEncoder> _input_encoder;
@@ -61,14 +62,14 @@ protected:
 	static void _bind_methods();
 
 public:
-	_RollbackHistoryTransmitter() = default;
+	_RollbackHistoryTransmitter();
 	~_RollbackHistoryTransmitter() override = default;
 
 	int get_earliest_input_tick();
 	int get_latest_state_tick();
 	void set_predicted_tick(Variant p_is_predicted_tick);
 	void sync_settings(Node* p_root, bool p_enable_input_broadcast, int p_full_state_interval, int p_diff_ack_interval);
-	void configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, PeerVisibilityFilter* p_visibility_filter, Ref<PropertyCache> p_property_cache, HashSet<Node*> p_skipset);
+	void configure(Ref<_PropertyHistoryBuffer> p_state_history, Ref<_PropertyHistoryBuffer> p_input_history, Ref<_PropertyConfig> p_state_property_config, Ref<_PropertyConfig> p_input_property_config, PeerVisibilityFilter* p_visibility_filter, Ref<PropertyCache> p_property_cache, Ref<_Set> p_skipset);
 	void reset();
 	void conclude_tick_loop();
 	void transmit_input(int tick);

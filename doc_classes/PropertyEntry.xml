@@ -39,4 +39,12 @@
 			</description>
 		</method>
 	</methods>
+	<members>
+		<member name="node" type="Node" setter="set_node" getter="get_node">
+		</member>
+		<member name="path" type="String" setter="set_path" getter="get_path" default="&quot;&quot;">
+		</member>
+		<member name="property" type="String" setter="set_property" getter="get_property" default="&quot;&quot;">
+		</member>
+	</members>
 </class>

@@ -42,5 +42,5 @@ public:
 	Variant get_value();
 	void set_value(Variant value);
 	bool is_valid();
-	String to_string() const;
+	String _to_string() const;
 };

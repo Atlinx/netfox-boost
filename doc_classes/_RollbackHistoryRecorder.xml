@@ -24,6 +24,17 @@
 			<description>
 			</description>
 		</method>
+		<method name="configure">
+			<return type="void" />
+			<param index="0" name="p_state_history" type="_PropertyHistoryBuffer" />
+			<param index="1" name="p_input_history" type="_PropertyHistoryBuffer" />
+			<param index="2" name="p_state_property_config" type="_PropertyConfig" />
+			<param index="3" name="p_input_property_config" type="_PropertyConfig" />
+			<param index="4" name="p_property_cache" type="PropertyCache" />
+			<param index="5" name="p_skipset" type="_Set" />
+			<description>
+			</description>
+		</method>
 		<method name="record_input">
 			<return type="void" />
 			<param index="0" name="tick" type="int" />

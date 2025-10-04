@@ -51,11 +51,6 @@
 			<description>
 			</description>
 		</method>
-		<method name="new" qualifiers="static">
-			<return type="_Set" />
-			<description>
-			</description>
-		</method>
 		<method name="of" qualifiers="static">
 			<return type="_Set" />
 			<param index="0" name="items" type="Array" />

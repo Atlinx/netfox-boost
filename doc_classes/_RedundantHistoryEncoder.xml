@@ -11,7 +11,7 @@
 			<return type="int" />
 			<param index="0" name="tick" type="int" />
 			<param index="1" name="snapshots" type="_PropertySnapshot[]" />
-			<param index="2" name="sender" type="int" />
+			<param index="2" name="sender" type="int" default="0" />
 			<description>
 			</description>
 		</method>

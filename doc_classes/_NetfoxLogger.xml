@@ -10,14 +10,14 @@
 		<method name="debug">
 			<return type="void" />
 			<param index="0" name="text" type="String" />
-			<param index="1" name="values" type="Array" />
+			<param index="1" name="values" type="Array" default="[]" />
 			<description>
 			</description>
 		</method>
 		<method name="error">
 			<return type="void" />
 			<param index="0" name="text" type="String" />
-			<param index="1" name="values" type="Array" />
+			<param index="1" name="values" type="Array" default="[]" />
 			<description>
 			</description>
 		</method>
@@ -48,7 +48,7 @@
 		<method name="info">
 			<return type="void" />
 			<param index="0" name="text" type="String" />
-			<param index="1" name="values" type="Array" />
+			<param index="1" name="values" type="Array" default="[]" />
 			<description>
 			</description>
 		</method>
@@ -68,21 +68,21 @@
 		<method name="register_tag" qualifiers="static">
 			<return type="void" />
 			<param index="0" name="tag" type="Callable" />
-			<param index="1" name="priority" type="int" />
+			<param index="1" name="priority" type="int" default="0" />
 			<description>
 			</description>
 		</method>
 		<method name="trace">
 			<return type="void" />
 			<param index="0" name="text" type="String" />
-			<param index="1" name="values" type="Array" />
+			<param index="1" name="values" type="Array" default="[]" />
 			<description>
 			</description>
 		</method>
 		<method name="warning">
 			<return type="void" />
 			<param index="0" name="text" type="String" />
-			<param index="1" name="values" type="Array" />
+			<param index="1" name="values" type="Array" default="[]" />
 			<description>
 			</description>
 		</method>

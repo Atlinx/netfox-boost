@@ -15,12 +15,12 @@ public:
 protected:
 	bool default_visibility = true;
 
-	TypedArray<Callable> _visibility_filters = TypedArray<Callable>();
-	Dictionary _visibility_overrides = Dictionary();
+	TypedArray<Callable> _visibility_filters;
+	Dictionary _visibility_overrides;
 	UpdateMode _update_mode = UpdateMode::UPDATE_ON_PEER;
 
-	TypedArray<int> _visible_peers = TypedArray<int>();
-	TypedArray<int> _rpc_target_peers = TypedArray<int>();
+	TypedArray<int> _visible_peers;
+	TypedArray<int> _rpc_target_peers;
 
 	static void _bind_methods();
 
