@@ -68,7 +68,6 @@ void RollbackFreshnessStore::clear()
 }
 
 void RollbackFreshnessStore::_bind_methods() {
-	ClassDB::bind_static_method("RollbackFreshnessStore", D_METHOD("new"), &RollbackFreshnessStore::new_);
 	ClassDB::bind_method(D_METHOD("is_fresh", "node", "tick"), &RollbackFreshnessStore::is_fresh);
 	ClassDB::bind_method(D_METHOD("notify_processed", "node", "tick"), &RollbackFreshnessStore::notify_processed);
 	ClassDB::bind_method(D_METHOD("trim"), &RollbackFreshnessStore::trim);

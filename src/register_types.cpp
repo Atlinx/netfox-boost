@@ -33,6 +33,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(PropertyCache);
 	GDREGISTER_CLASS(_PropertyConfig);
 	GDREGISTER_CLASS(PropertyEntry);
+	GDREGISTER_CLASS(_HistoryBuffer);
 	GDREGISTER_CLASS(_PropertyHistoryBuffer);
 	GDREGISTER_CLASS(_PropertySnapshot);
 	GDREGISTER_CLASS(PeerVisibilityFilter);
@@ -41,7 +42,6 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(_SnapshotHistoryEncoder);
 	GDREGISTER_CLASS(_RollbackHistoryRecorder);
 	GDREGISTER_CLASS(_RollbackHistoryTransmitter);
-	GDREGISTER_CLASS(_HistoryBuffer);
 	GDREGISTER_CLASS(RollbackFreshnessStore);
 	GDREGISTER_CLASS(_Set);
 }

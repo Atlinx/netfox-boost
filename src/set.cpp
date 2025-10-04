@@ -9,11 +9,11 @@ Ref<_Set> _Set::new_() {
 }
 
 Ref<_Set> _Set::of(const Array& p_items) {
-	Ref<_Set> result = memnew(_Set);
-	for (int i = 0; i < p_items.size(); ++i) {
-		result->add(p_items[i]);
-	}
-	return result;
+	Ref<_Set> ref;
+	ref.instantiate();
+	for (auto item : p_items)
+		ref->add(item);
+	return ref;
 }
 
 void _Set::add(const Variant& p_value) {
@@ -124,7 +124,6 @@ Variant _Set::_iter_get(Array p_iter) const {
 
 void _Set::_bind_methods() {
 	ClassDB::bind_static_method("_Set", D_METHOD("of", "items"), &_Set::of);
-	ClassDB::bind_static_method("_Set", D_METHOD("new"), &_Set::new_);
 
 	ClassDB::bind_method(D_METHOD("add", "value"), &_Set::add);
 	ClassDB::bind_method(D_METHOD("has", "value"), &_Set::has);

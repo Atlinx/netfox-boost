@@ -13,9 +13,7 @@ Vector<Callable> _NetfoxLogger::_ordered_tags;
 
 void _NetfoxLogger::set_module_log_level(const Dictionary& p_log_levels) {
 	module_log_level.clear();
-	Array keys = p_log_levels.keys();
-	for (int i = 0; i < keys.size(); ++i) {
-		String key = keys[i];
+	for (auto key : p_log_levels.keys()) {
 		module_log_level[key] = (LogLevel) (int) p_log_levels[key];
 	}
 }
@@ -79,11 +77,10 @@ void _NetfoxLogger::register_tag(Callable tag, int priority)
 	}
 	prio_groups.sort();
 
-	for (int i = 0; i < prio_groups.size(); ++i) {
-		int prio_group = prio_groups[i];
+	for (int prio_group : prio_groups) {
 		const Vector<Callable>& tag_group = _tags[prio_group];
-		for (int j = 0; j < tag_group.size(); ++j) {
-			_ordered_tags.push_back(tag_group[j]);
+		for (auto tag : tag_group) {
+			_ordered_tags.push_back(tag);
 		}
 	}
 }
@@ -128,26 +125,16 @@ String _NetfoxLogger::_format_text(String text, Array values, LogLevel level)
 
 	PackedStringArray result;
 
-	Array prefix_array_1;
-	prefix_array_1.push_back(level_prefixes[level]);
-	result.append(vformat("[%s]", prefix_array_1));
+	result.append(vformat("[%s]", level_prefixes[level]));
 	
-	for (int i = 0; i < _ordered_tags.size(); ++i) {
-		Callable tag = _ordered_tags[i];
-		Array tag_array;
-		tag_array.push_back(tag.call());
-		result.append(vformat("[%s]", tag_array));
-	}
-	
-	Array module_name_array;
-	module_name_array.push_back(module);
-	module_name_array.push_back(name);
-	result.append(vformat("[%s::%s] ", module_name_array));
+	for (Callable tag : _ordered_tags)
+		result.append(vformat("[%s]", tag.call()));
+	result.append(vformat("[%s::%s] ", module, name));
 
 	if (values.is_empty()) {
 		result.append(text);
 	} else {
-		result.append(vformat(text, values));
+		result.append(text.format(values));
 	}
 
 	return String("").join(result);

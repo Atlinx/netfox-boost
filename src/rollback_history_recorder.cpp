@@ -74,18 +74,11 @@ void _RollbackHistoryRecorder::record_state(int tick)
     }
 
     bool is_mutated = false;
-    Array recorded_state_props = _get_recorded_state_props();
-    
-    for (int i = 0; i < recorded_state_props.size(); ++i) {
-        Dictionary pe = recorded_state_props[i];
-        Variant node_obj = pe.get("node", Variant()); 
-        if (Object::cast_to<Node>(node_obj)) {
-            Variant mutation_result = network_rollback->call("is_mutated", node_obj, tick - 1);
-            
-            if (mutation_result.operator bool()) {
-                is_mutated = true;
+    for (Ref<PropertyEntry> pe : _get_recorded_state_props()) {
+        if (Object::cast_to<Node>(pe->node)) {
+            is_mutated = network_rollback->call("is_mutated", pe->node, tick - 1);
+            if (is_mutated)
                 break;
-            }
         }
     }
     
@@ -103,7 +96,7 @@ void _RollbackHistoryRecorder::record_state(int tick)
 
 bool _RollbackHistoryRecorder::_should_record_tick(int tick)
 {
-	Array recorded_state_props = _get_recorded_state_props();
+	TypedArray<PropertyEntry> recorded_state_props = _get_recorded_state_props();
 
 	if (recorded_state_props.is_empty()) {
 		// Don't record tick if there's no props to record
@@ -111,25 +104,16 @@ bool _RollbackHistoryRecorder::_should_record_tick(int tick)
 	}
 
 	Node* network_rollback = Utils::get_autoload("NetworkRollback");
-	
 	if (!network_rollback) {
 		ERR_FAIL_V_MSG(false, "NetworkRollback autoload not found for mutation check.");
 	}
 
 	bool was_mutated = false;
-	for (int i = 0; i < recorded_state_props.size(); ++i) {
-		Dictionary pe = recorded_state_props[i];
-		Variant node_variant = pe.get("node", Variant()); 
-		
-		Object* node_obj = node_variant;
-		
-		if (node_obj) {
-			Variant mutation_result = network_rollback->call("is_mutated", node_obj, tick - 1);
-			
-			if (mutation_result.operator bool()) {
-				was_mutated = true;
+	for (Ref<PropertyEntry> pe : recorded_state_props) {
+		if (pe->node) {
+			was_mutated = network_rollback->call("is_mutated", pe->node, tick - 1);
+			if (was_mutated)
 				break;
-			}
 		}
 	}
     
@@ -170,8 +154,7 @@ Array _RollbackHistoryRecorder::_get_state_props_to_record(int tick)
 
 	// Implementation of .filter(func(pe): return _should_record_property(pe, tick))
 	Array filtered_props;
-	for (int i = 0; i < recorded_state_props.size(); ++i) {
-		const Ref<PropertyEntry> pe = recorded_state_props[i];
+	for (Ref<PropertyEntry> pe : recorded_state_props) {
 		if (_should_record_property(pe, tick)) {
 			filtered_props.push_back(pe);
 		}

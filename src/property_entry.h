@@ -25,9 +25,19 @@ public:
 	static Ref<PropertyEntry> parse(Node* root, String path);
 	static String make_path(Node* root, Variant node, String property);
 
+	// Original fields
 	String path;
 	Node* node;
 	String property;
+
+	String get_path() const;
+	void set_path(const String& p_path);
+
+	Node* get_node() const;
+	void set_node(Node* p_node);
+
+	String get_property() const;
+	void set_property(const String& p_property);
 
 	Variant get_value();
 	void set_value(Variant value);
