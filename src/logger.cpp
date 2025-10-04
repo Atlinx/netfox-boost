@@ -134,7 +134,7 @@ String _NetfoxLogger::_format_text(String text, Array values, LogLevel level)
 	if (values.is_empty()) {
 		result.append(text);
 	} else {
-		result.append(text.format(values));
+		result.append(text % values);
 	}
 
 	return String("").join(result);
