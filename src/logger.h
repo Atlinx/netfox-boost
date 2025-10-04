@@ -17,7 +17,6 @@ protected:
 
 	static LogLevel log_level;
 	static HashMap<String, LogLevel> module_log_level;
-
 	static HashMap<int, Vector<Callable>> _tags;
 	static Vector<Callable> _ordered_tags;
 
@@ -40,9 +39,8 @@ public:
 	_NetfoxLogger() = default;
 	~_NetfoxLogger() override = default;
 
-	static void _static_init();
-	static Ref<_NetfoxLogger> _new(String p_module, String p_name);
-	
+	static Ref<_NetfoxLogger> new_(String p_module, String p_name);
+
 	static void set_log_level(LogLevel p_level) { log_level = p_level; }
 	static LogLevel get_log_level() { return log_level; }
 

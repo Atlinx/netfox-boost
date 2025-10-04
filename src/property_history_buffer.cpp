@@ -17,7 +17,7 @@ Ref<_PropertySnapshot> _PropertyHistoryBuffer::get_snapshot(int tick)
 	if(_buffer.has(tick))
 		return _buffer[tick];
 	else
-		return _PropertySnapshot::_new();
+		return _PropertySnapshot::new_();
 }
 
 void _PropertyHistoryBuffer::set_snapshot(int tick, Variant data)
@@ -37,7 +37,7 @@ Ref<_PropertySnapshot> _PropertyHistoryBuffer::get_history(int tick)
 {
 	Variant snapshot = _HistoryBuffer::get_history(tick);
 
-	return ( snapshot ? snapshot : _PropertySnapshot::_new() );
+	return ( snapshot ? snapshot : _PropertySnapshot::new_() );
 }
 
 void _PropertyHistoryBuffer::trim(int earliest_tick_to_keep)
@@ -60,7 +60,7 @@ void _PropertyHistoryBuffer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_snapshot", "tick"), &_PropertyHistoryBuffer::get_snapshot);
 	ClassDB::bind_method(D_METHOD("set_snapshot", "tick", "data"), &_PropertyHistoryBuffer::set_snapshot);
 	ClassDB::bind_method(D_METHOD("get_history", "tick"), &_PropertyHistoryBuffer::get_history);
-	ClassDB::bind_method(D_METHOD("trim", "earliest_tick_to_keep"), &_PropertyHistoryBuffer::trim);
+	ClassDB::bind_method(D_METHOD("trim", "earliest_tick_to_keep"), &_PropertyHistoryBuffer::trim, DEFVAL(-1));
 	ClassDB::bind_method(D_METHOD("merge", "data", "tick"), &_PropertyHistoryBuffer::merge);
 }
 

@@ -28,7 +28,7 @@ Dictionary _NetfoxLogger::get_module_log_level() {
 	return dict;
 }
 
-Ref<_NetfoxLogger> _NetfoxLogger::_new(String p_module, String p_name)
+Ref<_NetfoxLogger> _NetfoxLogger::new_(String p_module, String p_name)
 {
 	Ref<_NetfoxLogger> logger;
 	logger.instantiate();
@@ -39,16 +39,16 @@ Ref<_NetfoxLogger> _NetfoxLogger::_new(String p_module, String p_name)
 
 Ref<_NetfoxLogger> _NetfoxLogger::for_netfox(String p_name)
 {
-	return _NetfoxLogger::_new("netfox", p_name);
+	return _NetfoxLogger::new_("netfox", p_name);
 }
 
 Ref<_NetfoxLogger> _NetfoxLogger::for_noray(String p_name)
 {
-	return _NetfoxLogger::_new("netfox.noray", p_name);
+	return _NetfoxLogger::new_("netfox.noray", p_name);
 }
 Ref<_NetfoxLogger> _NetfoxLogger::for_extras(String p_name)
 {
-	return _NetfoxLogger::_new("netfox.extras", p_name);
+	return _NetfoxLogger::new_("netfox.extras", p_name);
 }
 
 Dictionary _NetfoxLogger::make_setting(String name)
@@ -105,15 +105,6 @@ void _NetfoxLogger::free_tag(Callable tag)
 	}
 
 	_ordered_tags.erase(tag);
-}
-
-void _NetfoxLogger::_static_init()
-{
-	log_level = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/log_level", DEFAULT_LOG_LEVEL);
-
-	module_log_level["netfox"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_log_level", DEFAULT_LOG_LEVEL);
-	module_log_level["netfox.noray"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_noray_log_level", DEFAULT_LOG_LEVEL);
-	module_log_level["netfox.extras"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_extras_log_level", DEFAULT_LOG_LEVEL);
 }
 
 bool _NetfoxLogger::_check_log_level(LogLevel level)
@@ -207,8 +198,15 @@ void _NetfoxLogger::error(String text, Array values)
 	}
 }
 
-void _NetfoxLogger::_bind_methods() {
-	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("new", "p_module", "p_name"), &_NetfoxLogger::_new);
+void _NetfoxLogger::_bind_methods() 
+{
+	log_level = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/log_level", DEFAULT_LOG_LEVEL);
+
+	module_log_level["netfox"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_log_level", DEFAULT_LOG_LEVEL);
+	module_log_level["netfox.noray"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_noray_log_level", DEFAULT_LOG_LEVEL);
+	module_log_level["netfox.extras"] = (LogLevel) (int) ProjectSettings::get_singleton()->get_setting("netfox/logging/netfox_extras_log_level", DEFAULT_LOG_LEVEL);
+
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("new_", "p_module", "p_name"), &_NetfoxLogger::new_);
 
 	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("set_log_level", "level"), &_NetfoxLogger::set_log_level);
 	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("get_log_level"), &_NetfoxLogger::get_log_level);
@@ -220,13 +218,13 @@ void _NetfoxLogger::_bind_methods() {
 	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("for_noray", "p_name"), &_NetfoxLogger::for_noray);
 	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("for_extras", "p_name"), &_NetfoxLogger::for_extras);
 	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("make_setting", "name"), &_NetfoxLogger::make_setting);
-	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("register_tag", "tag", "priority"), &_NetfoxLogger::register_tag);
+	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("register_tag", "tag", "priority"), &_NetfoxLogger::register_tag, DEFVAL(0));
 	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("free_tag", "tag"), &_NetfoxLogger::free_tag);
-	ClassDB::bind_method(D_METHOD("trace", "text", "values"), &_NetfoxLogger::trace);
-	ClassDB::bind_method(D_METHOD("debug", "text", "values"), &_NetfoxLogger::debug);
-	ClassDB::bind_method(D_METHOD("info", "text", "values"), &_NetfoxLogger::info);
-	ClassDB::bind_method(D_METHOD("warning", "text", "values"), &_NetfoxLogger::warning);
-	ClassDB::bind_method(D_METHOD("error", "text", "values"), &_NetfoxLogger::error);
+	ClassDB::bind_method(D_METHOD("trace", "text", "values"), &_NetfoxLogger::trace, DEFVAL(Array()));
+	ClassDB::bind_method(D_METHOD("debug", "text", "values"), &_NetfoxLogger::debug, DEFVAL(Array()));
+	ClassDB::bind_method(D_METHOD("info", "text", "values"), &_NetfoxLogger::info, DEFVAL(Array()));
+	ClassDB::bind_method(D_METHOD("warning", "text", "values"), &_NetfoxLogger::warning, DEFVAL(Array()));
+	ClassDB::bind_method(D_METHOD("error", "text", "values"), &_NetfoxLogger::error, DEFVAL(Array()));
 
 	ADD_PROPERTY(
 		PropertyInfo(Variant::INT, "log_level", PROPERTY_HINT_ENUM, "Trace,Debug,Info,Warn,Error"),

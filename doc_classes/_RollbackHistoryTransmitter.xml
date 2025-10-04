@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="_RollbackHistoryTransmitter" inherits="Node" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="conclude_tick_loop">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="get_earliest_input_tick">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="get_latest_state_tick">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="reset">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="set_predicted_tick">
+			<return type="void" />
+			<param index="0" name="p_is_predicted_tick" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="sync_settings">
+			<return type="void" />
+			<param index="0" name="p_root" type="Node" />
+			<param index="1" name="p_enable_input_broadcast" type="bool" />
+			<param index="2" name="p_full_state_interval" type="int" />
+			<param index="3" name="p_diff_ack_interval" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="transmit_input">
+			<return type="void" />
+			<param index="0" name="tick" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="transmit_state">
+			<return type="void" />
+			<param index="0" name="tick" type="int" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<signals>
+		<signal name="_on_transmit_state">
+			<param index="0" name="state" type="Dictionary" />
+			<param index="1" name="tick" type="int" />
+			<description>
+			</description>
+		</signal>
+	</signals>
+</class>

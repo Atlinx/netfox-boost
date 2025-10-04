@@ -37,15 +37,14 @@ public:
 	_DiffHistoryEncoder() = default;
 	~_DiffHistoryEncoder() override = default;
 
-	static void _static_init();
-	static Ref<_DiffHistoryEncoder> _new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
+	static Ref<_DiffHistoryEncoder> new_(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
 
 	void add_properties(Array properties);
 	PackedByteArray encode(int tick, int reference_tick, Array properties);
 	Ref<_PropertySnapshot> decode(PackedByteArray data, Array properties);
 
 // TODO: Rework metrics so these are not needed
-	bool apply(int tick, Ref<_PropertySnapshot> snapshot, int reference_tick, int sender =  - 1);
+	bool apply(int tick, Ref<_PropertySnapshot> snapshot, int reference_tick, int sender = -1);
 	Dictionary get_encoded_snapshot();
 	Dictionary get_full_snapshot();
 	bool _ensure_property_idx(String property);

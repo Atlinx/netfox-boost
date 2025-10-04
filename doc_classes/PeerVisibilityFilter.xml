@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="PeerVisibilityFilter" inherits="Node" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="add_visibility_filter">
+			<return type="void" />
+			<param index="0" name="filter" type="Callable" />
+			<description>
+			</description>
+		</method>
+		<method name="clear_visibility_filters">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="get_rpc_target_peers">
+			<return type="int[]" />
+			<description>
+			</description>
+		</method>
+		<method name="get_update_mode">
+			<return type="int" enum="PeerVisibilityFilter.UpdateMode" />
+			<description>
+			</description>
+		</method>
+		<method name="get_visibility_for">
+			<return type="bool" />
+			<param index="0" name="peer" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="get_visible_peers">
+			<return type="int[]" />
+			<description>
+			</description>
+		</method>
+		<method name="remove_visibility_filter">
+			<return type="void" />
+			<param index="0" name="filter" type="Callable" />
+			<description>
+			</description>
+		</method>
+		<method name="set_update_mode">
+			<return type="void" />
+			<param index="0" name="mode" type="int" enum="PeerVisibilityFilter.UpdateMode" />
+			<description>
+			</description>
+		</method>
+		<method name="set_visibility_for">
+			<return type="void" />
+			<param index="0" name="peer" type="int" />
+			<param index="1" name="visibility" type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="unset_visibility_for">
+			<return type="void" />
+			<param index="0" name="peer" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="update_visibility">
+			<return type="void" />
+			<param index="0" name="peers" type="PackedInt32Array" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+		<constant name="UPDATE_NEVER" value="0" enum="UpdateMode">
+		</constant>
+		<constant name="UPDATE_ON_PEER" value="1" enum="UpdateMode">
+		</constant>
+		<constant name="UPDATE_PER_TICK_LOOP" value="2" enum="UpdateMode">
+		</constant>
+		<constant name="UPDATE_PER_TICK" value="3" enum="UpdateMode">
+		</constant>
+		<constant name="UPDATE_PER_ROLLBACK_TICK" value="4" enum="UpdateMode">
+		</constant>
+	</constants>
+</class>

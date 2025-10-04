@@ -7,12 +7,7 @@
 
 Ref<_NetfoxLogger> PropertyCache::_logger;
 
-void PropertyCache::_static_init()
-{
-	_logger = _NetfoxLogger::for_netfox("PropertyCache");
-}
-
-Ref<PropertyCache> PropertyCache::_new(Node* p_root)
+Ref<PropertyCache> PropertyCache::new_(Node* p_root)
 {
 	if (_logger.is_null())
 		_logger = _NetfoxLogger::for_netfox("PropertyCache");
@@ -69,8 +64,11 @@ void PropertyCache::clear()
 	_cache.clear();
 }
 
-void PropertyCache::_bind_methods() {
-	ClassDB::bind_static_method("PropertyCache", D_METHOD("new", "p_root"), &PropertyCache::_new);
+void PropertyCache::_bind_methods() 
+{
+	_logger = _NetfoxLogger::for_netfox("PropertyCache");
+
+	ClassDB::bind_static_method("PropertyCache", D_METHOD("new_", "p_root"), &PropertyCache::new_);
 	ClassDB::bind_method(D_METHOD("get_entry", "path"), &PropertyCache::get_entry);
 	ClassDB::bind_method(D_METHOD("properties"), &PropertyCache::gd_properties);
 	ClassDB::bind_method(D_METHOD("clear"), &PropertyCache::clear);

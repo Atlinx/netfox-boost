@@ -33,13 +33,12 @@ public:
 	_RedundantHistoryEncoder() = default;
 	~_RedundantHistoryEncoder() override = default;
 
-	static void _static_init();
-	static Ref<_RedundantHistoryEncoder> _new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
+	static Ref<_RedundantHistoryEncoder> new_(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
 
 	int get_redundancy();
 	void set_redundancy(int p_redundancy);
 	void set_properties(TypedArray<PropertyEntry> properties);
 	Array encode(int tick, TypedArray<PropertyEntry> properties);
 	TypedArray<_PropertySnapshot> decode(Array data, TypedArray<PropertyEntry> properties);
-	int apply(int tick, TypedArray<_PropertySnapshot> snapshots, int sender = 0);
+	int apply(int tick, TypedArray<_PropertySnapshot> snapshots, int sender = -1);
 };

@@ -29,10 +29,9 @@ public:
 	_PropertySnapshot() = default;
 	~_PropertySnapshot() override = default;
 
-	static void _static_init();
 	static Ref<_PropertySnapshot> from_dictionary(Dictionary data);
 	static Ref<_PropertySnapshot> extract(TypedArray<PropertyEntry> properties);
-	static Ref<_PropertySnapshot> _new(Dictionary p_snapshot = Dictionary());
+	static Ref<_PropertySnapshot> new_(Dictionary p_snapshot = Dictionary());
 	
 	Dictionary as_dictionary();
 	void set_value(String property_path, Variant data);

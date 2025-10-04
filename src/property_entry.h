@@ -22,7 +22,6 @@ public:
 	PropertyEntry() = default;
 	~PropertyEntry() override = default;
 
-	static void _static_init();
 	static Ref<PropertyEntry> parse(Node* root, String path);
 	static String make_path(Node* root, Variant node, String property);
 

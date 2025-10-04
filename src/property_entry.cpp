@@ -8,11 +8,6 @@
 
 Ref<_NetfoxLogger> PropertyEntry::_logger;
 
-void PropertyEntry::_static_init()
-{
-	_logger = _NetfoxLogger::for_netfox("PropertyEntry");
-}
-
 Variant PropertyEntry::get_value()
 {
 	return node->get_indexed(property);
@@ -88,7 +83,10 @@ String PropertyEntry::make_path(Node* root, Variant node, String property)
 	return vformat("%s:%s", node_path, property);
 }
 
-void PropertyEntry::_bind_methods() {
+void PropertyEntry::_bind_methods() 
+{
+	_logger = _NetfoxLogger::for_netfox("PropertyEntry");
+	
 	ClassDB::bind_static_method("PropertyEntry", D_METHOD("parse", "root", "path"), &PropertyEntry::parse);
 	ClassDB::bind_static_method("PropertyEntry", D_METHOD("make_path", "root", "node", "property"), &PropertyEntry::make_path);
 	ClassDB::bind_method(D_METHOD("get_value"), &PropertyEntry::get_value);

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="PropertyEntry" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="get_value">
+			<return type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="is_valid">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="make_path" qualifiers="static">
+			<return type="String" />
+			<param index="0" name="root" type="Node" />
+			<param index="1" name="node" type="Variant" />
+			<param index="2" name="property" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="parse" qualifiers="static">
+			<return type="PropertyEntry" />
+			<param index="0" name="root" type="Node" />
+			<param index="1" name="path" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="set_value">
+			<return type="void" />
+			<param index="0" name="value" type="Variant" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

@@ -8,12 +8,7 @@
 
 Ref<_NetfoxLogger> _SnapshotHistoryEncoder::_logger;
 
-void _SnapshotHistoryEncoder::_static_init()
-{
-	_logger = _NetfoxLogger::for_netfox("_SnapshotHistoryEncoder");
-}
-
-Ref<_SnapshotHistoryEncoder> _SnapshotHistoryEncoder::_new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
+Ref<_SnapshotHistoryEncoder> _SnapshotHistoryEncoder::new_(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
 {	
 	Ref<_SnapshotHistoryEncoder> ref;
 	ref.instantiate();
@@ -49,7 +44,7 @@ Array _SnapshotHistoryEncoder::encode(int tick, TypedArray<PropertyEntry> proper
 
 Ref<_PropertySnapshot> _SnapshotHistoryEncoder::decode(Array data, TypedArray<PropertyEntry> properties)
 {
-	Ref<_PropertySnapshot> result = _PropertySnapshot::_new();
+	Ref<_PropertySnapshot> result = _PropertySnapshot::new_();
 	uint8_t packet_version = data.pop_back();
 
 	if(packet_version != _version)
@@ -104,11 +99,14 @@ bool _SnapshotHistoryEncoder::apply(int tick, Ref<_PropertySnapshot> snapshot, i
 	return true;
 }
 
-void _SnapshotHistoryEncoder::_bind_methods() {
-	ClassDB::bind_static_method("_SnapshotHistoryEncoder", D_METHOD("_new", "p_history", "p_property_cache"), &_SnapshotHistoryEncoder::_new);
+void _SnapshotHistoryEncoder::_bind_methods() 
+{
+	_logger = _NetfoxLogger::for_netfox("_SnapshotHistoryEncoder");
+
+	ClassDB::bind_static_method("_SnapshotHistoryEncoder", D_METHOD("new_", "p_history", "p_property_cache"), &_SnapshotHistoryEncoder::new_);
 	ClassDB::bind_method(D_METHOD("set_properties", "properties"), &_SnapshotHistoryEncoder::set_properties);
 	ClassDB::bind_method(D_METHOD("encode", "tick", "properties"), &_SnapshotHistoryEncoder::encode);
 	ClassDB::bind_method(D_METHOD("decode", "data", "properties"), &_SnapshotHistoryEncoder::decode);
-	ClassDB::bind_method(D_METHOD("apply", "tick", "snapshot", "sender"), &_SnapshotHistoryEncoder::apply);
+	ClassDB::bind_method(D_METHOD("apply", "tick", "snapshot", "sender"), &_SnapshotHistoryEncoder::apply, DEFVAL(-1));
 }
 

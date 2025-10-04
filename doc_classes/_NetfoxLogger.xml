@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="_NetfoxLogger" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="debug">
+			<return type="void" />
+			<param index="0" name="text" type="String" />
+			<param index="1" name="values" type="Array" />
+			<description>
+			</description>
+		</method>
+		<method name="error">
+			<return type="void" />
+			<param index="0" name="text" type="String" />
+			<param index="1" name="values" type="Array" />
+			<description>
+			</description>
+		</method>
+		<method name="for_extras" qualifiers="static">
+			<return type="_NetfoxLogger" />
+			<param index="0" name="p_name" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="for_netfox" qualifiers="static">
+			<return type="_NetfoxLogger" />
+			<param index="0" name="p_name" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="for_noray" qualifiers="static">
+			<return type="_NetfoxLogger" />
+			<param index="0" name="p_name" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="free_tag" qualifiers="static">
+			<return type="void" />
+			<param index="0" name="tag" type="Callable" />
+			<description>
+			</description>
+		</method>
+		<method name="info">
+			<return type="void" />
+			<param index="0" name="text" type="String" />
+			<param index="1" name="values" type="Array" />
+			<description>
+			</description>
+		</method>
+		<method name="make_setting" qualifiers="static">
+			<return type="Dictionary" />
+			<param index="0" name="name" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="new_" qualifiers="static">
+			<return type="_NetfoxLogger" />
+			<param index="0" name="p_module" type="String" />
+			<param index="1" name="p_name" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="register_tag" qualifiers="static">
+			<return type="void" />
+			<param index="0" name="tag" type="Callable" />
+			<param index="1" name="priority" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="trace">
+			<return type="void" />
+			<param index="0" name="text" type="String" />
+			<param index="1" name="values" type="Array" />
+			<description>
+			</description>
+		</method>
+		<method name="warning">
+			<return type="void" />
+			<param index="0" name="text" type="String" />
+			<param index="1" name="values" type="Array" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="log_level" type="int" setter="set_log_level" getter="get_log_level" enum="_NetfoxLogger.LogLevel" default="2">
+		</member>
+		<member name="module_log_level" type="Dictionary" setter="set_module_log_level" getter="get_module_log_level" default="{ &quot;netfox&quot;: 2, &quot;netfox.extras&quot;: 2, &quot;netfox.noray&quot;: 2 }">
+		</member>
+	</members>
+	<constants>
+		<constant name="LOG_MIN" value="0" enum="LogLevel">
+		</constant>
+		<constant name="LOG_TRACE" value="1" enum="LogLevel">
+		</constant>
+		<constant name="LOG_DEBUG" value="2" enum="LogLevel">
+		</constant>
+		<constant name="LOG_INFO" value="3" enum="LogLevel">
+		</constant>
+		<constant name="LOG_WARN" value="4" enum="LogLevel">
+		</constant>
+		<constant name="LOG_ERROR" value="5" enum="LogLevel">
+		</constant>
+		<constant name="LOG_MAX" value="6" enum="LogLevel">
+		</constant>
+	</constants>
+</class>

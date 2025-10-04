@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="PropertyCache" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="clear">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="get_entry">
+			<return type="PropertyEntry" />
+			<param index="0" name="path" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="new_" qualifiers="static">
+			<return type="PropertyCache" />
+			<param index="0" name="p_root" type="Node" />
+			<description>
+			</description>
+		</method>
+		<method name="properties">
+			<return type="PropertyEntry[]" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

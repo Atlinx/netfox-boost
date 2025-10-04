@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="_PropertyConfig" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="clear">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="get_owned_properties">
+			<return type="PropertyEntry[]" />
+			<description>
+			</description>
+		</method>
+		<method name="get_properties">
+			<return type="PropertyEntry[]" />
+			<description>
+			</description>
+		</method>
+		<method name="get_properties_owned_by">
+			<return type="PropertyEntry[]" />
+			<param index="0" name="peer" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="set_properties">
+			<return type="void" />
+			<param index="0" name="p_properties" type="PropertyEntry[]" />
+			<description>
+			</description>
+		</method>
+		<method name="set_properties_from_paths">
+			<return type="void" />
+			<param index="0" name="property_paths" type="Array" />
+			<param index="1" name="property_cache" type="PropertyCache" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

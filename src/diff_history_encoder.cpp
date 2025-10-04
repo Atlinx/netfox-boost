@@ -9,12 +9,7 @@
 
 Ref<_NetfoxLogger> _DiffHistoryEncoder::_logger;
 
-void _DiffHistoryEncoder::_static_init()
-{
-	_logger = _NetfoxLogger::for_netfox("DiffHistoryEncoder");
-}
-
-Ref<_DiffHistoryEncoder> _DiffHistoryEncoder::_new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
+Ref<_DiffHistoryEncoder> _DiffHistoryEncoder::new_(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
 {	
 	Ref<_DiffHistoryEncoder> ref;
 	ref.instantiate();
@@ -73,7 +68,7 @@ PackedByteArray _DiffHistoryEncoder::encode(int tick, int reference_tick, Array 
 
 Ref<_PropertySnapshot> _DiffHistoryEncoder::decode(PackedByteArray data, Array properties)
 {
-	Ref<_PropertySnapshot> result = _PropertySnapshot::_new();
+	Ref<_PropertySnapshot> result = _PropertySnapshot::new_();
 
 	if(data.is_empty())
 		return result;
@@ -180,11 +175,13 @@ bool _DiffHistoryEncoder::_ensure_property_idx(String property)
 
 void _DiffHistoryEncoder::_bind_methods() 
 {
-	ClassDB::bind_static_method("_DiffHistoryEncoder", D_METHOD("new", "p_history", "p_property_cache"), &_DiffHistoryEncoder::_new);
+	_logger = _NetfoxLogger::for_netfox("DiffHistoryEncoder");
+
+	ClassDB::bind_static_method("_DiffHistoryEncoder", D_METHOD("new_", "p_history", "p_property_cache"), &_DiffHistoryEncoder::new_);
 	ClassDB::bind_method(D_METHOD("add_properties", "properties"), &_DiffHistoryEncoder::add_properties);
 	ClassDB::bind_method(D_METHOD("encode", "tick", "reference_tick", "properties"), &_DiffHistoryEncoder::encode);
 	ClassDB::bind_method(D_METHOD("decode", "data", "properties"), &_DiffHistoryEncoder::decode);
-	ClassDB::bind_method(D_METHOD("apply", "tick", "snapshot", "reference_tick", "sender"), &_DiffHistoryEncoder::apply);
+	ClassDB::bind_method(D_METHOD("apply", "tick", "snapshot", "reference_tick", "sender"), &_DiffHistoryEncoder::apply, DEFVAL(-1));
 	ClassDB::bind_method(D_METHOD("get_encoded_snapshot"), &_DiffHistoryEncoder::get_encoded_snapshot);
 	ClassDB::bind_method(D_METHOD("get_full_snapshot"), &_DiffHistoryEncoder::get_full_snapshot);
 

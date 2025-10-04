@@ -65,8 +65,6 @@ public:
 	_RollbackHistoryTransmitter() = default;
 	~_RollbackHistoryTransmitter() override = default;
 
-	static void _static_init();
-
 	int get_earliest_input_tick();
 	int get_latest_state_tick();
 	void set_predicted_tick(Variant p_is_predicted_tick);

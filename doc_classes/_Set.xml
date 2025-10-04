@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="_Set" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="add">
+			<return type="void" />
+			<param index="0" name="value" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="clear">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="equals" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="other" type="_Set" />
+			<description>
+			</description>
+		</method>
+		<method name="erase">
+			<return type="bool" />
+			<param index="0" name="value" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="has" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="value" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="is_empty" qualifiers="const">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="max" qualifiers="const">
+			<return type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="min" qualifiers="const">
+			<return type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="new" qualifiers="static">
+			<return type="_Set" />
+			<description>
+			</description>
+		</method>
+		<method name="of" qualifiers="static">
+			<return type="_Set" />
+			<param index="0" name="items" type="Array" />
+			<description>
+			</description>
+		</method>
+		<method name="size" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="values" qualifiers="const">
+			<return type="Array" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="_PropertySnapshot" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="apply">
+			<return type="void" />
+			<param index="0" name="cache" type="PropertyCache" />
+			<description>
+			</description>
+		</method>
+		<method name="as_dictionary">
+			<return type="Dictionary" />
+			<description>
+			</description>
+		</method>
+		<method name="equals">
+			<return type="bool" />
+			<param index="0" name="other" type="_PropertySnapshot" />
+			<description>
+			</description>
+		</method>
+		<method name="extract" qualifiers="static">
+			<return type="_PropertySnapshot" />
+			<param index="0" name="properties" type="PropertyEntry[]" />
+			<description>
+			</description>
+		</method>
+		<method name="from_dictionary" qualifiers="static">
+			<return type="_PropertySnapshot" />
+			<param index="0" name="data" type="Dictionary" />
+			<description>
+			</description>
+		</method>
+		<method name="get_value">
+			<return type="Variant" />
+			<param index="0" name="property_path" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="has">
+			<return type="bool" />
+			<param index="0" name="property_path" type="String" />
+			<description>
+			</description>
+		</method>
+		<method name="is_empty">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="make_patch">
+			<return type="_PropertySnapshot" />
+			<param index="0" name="data" type="_PropertySnapshot" />
+			<description>
+			</description>
+		</method>
+		<method name="merge">
+			<return type="_PropertySnapshot" />
+			<param index="0" name="data" type="_PropertySnapshot" />
+			<description>
+			</description>
+		</method>
+		<method name="new_" qualifiers="static">
+			<return type="_PropertySnapshot" />
+			<param index="0" name="p_snapshot" type="Dictionary" />
+			<description>
+			</description>
+		</method>
+		<method name="properties">
+			<return type="String[]" />
+			<description>
+			</description>
+		</method>
+		<method name="sanitize">
+			<return type="void" />
+			<param index="0" name="sender" type="int" />
+			<param index="1" name="property_cache" type="PropertyCache" />
+			<description>
+			</description>
+		</method>
+		<method name="set_value">
+			<return type="void" />
+			<param index="0" name="property_path" type="String" />
+			<param index="1" name="data" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="size">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

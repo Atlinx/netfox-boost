@@ -27,12 +27,10 @@ public:
 	PropertyCache() = default;
 	~PropertyCache() override = default;
 
-	static void _static_init();
-
 	Ref<PropertyEntry> get_entry(String path);
 	TypedArray<PropertyEntry> gd_properties();
 	Vector<Ref<PropertyEntry>> properties();
 	void clear();
 
-	static Ref<PropertyCache> _new(Node* p_root);
+	static Ref<PropertyCache> new_(Node* p_root);
 };

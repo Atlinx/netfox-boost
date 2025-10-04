@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="_RollbackHistoryRecorder" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="apply_display_state">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="apply_state">
+			<return type="void" />
+			<param index="0" name="tick" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="apply_tick">
+			<return type="void" />
+			<param index="0" name="tick" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="record_input">
+			<return type="void" />
+			<param index="0" name="tick" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="record_state">
+			<return type="void" />
+			<param index="0" name="tick" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="set_latest_state_tick">
+			<return type="void" />
+			<param index="0" name="p_latest_state_tick" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="trim_history">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

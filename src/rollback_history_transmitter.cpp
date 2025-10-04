@@ -10,11 +10,6 @@
 
 Ref<_NetfoxLogger> _RollbackHistoryTransmitter::_logger;
 
-void _RollbackHistoryTransmitter::_static_init()
-{
-	_logger = _NetfoxLogger::for_netfox("_RollbackHistoryTransmitter");
-}
-
 int _RollbackHistoryTransmitter::get_earliest_input_tick()
 {
 	return _earliest_input_tick;
@@ -48,9 +43,9 @@ void _RollbackHistoryTransmitter::configure(Ref<_PropertyHistoryBuffer> p_state_
 	_property_cache = p_property_cache;
 	_skipset = p_skipset;
 
-	_input_encoder = _RedundantHistoryEncoder::_new(_input_history, _property_cache);
-	_full_state_encoder = _SnapshotHistoryEncoder::_new(_state_history, _property_cache);
-	_diff_state_encoder = _DiffHistoryEncoder::_new(_state_history, _property_cache);
+	_input_encoder = _RedundantHistoryEncoder::new_(_input_history, _property_cache);
+	_full_state_encoder = _SnapshotHistoryEncoder::new_(_state_history, _property_cache);
+	_diff_state_encoder = _DiffHistoryEncoder::new_(_state_history, _property_cache);
 
 	_is_initialized = true;
 
@@ -130,7 +125,7 @@ void _RollbackHistoryTransmitter::transmit_state(int tick)
 	}
 
 	// Include properties we own
-	Ref<_PropertySnapshot> full_state = _PropertySnapshot::_new();
+	Ref<_PropertySnapshot> full_state = _PropertySnapshot::new_();
 
 	Array props = _get_owned_state_props();
 	for(int i = 0; i < props.size(); ++i)
@@ -353,7 +348,10 @@ TypedArray<PropertyEntry> _RollbackHistoryTransmitter::_get_owned_input_props()
 	return _input_property_config->get_owned_properties();
 }
 
-void _RollbackHistoryTransmitter::_bind_methods() {
+void _RollbackHistoryTransmitter::_bind_methods() 
+{
+	_logger = _NetfoxLogger::for_netfox("_RollbackHistoryTransmitter");
+
 	ClassDB::bind_method(D_METHOD("get_earliest_input_tick"), &_RollbackHistoryTransmitter::get_earliest_input_tick);
 	ClassDB::bind_method(D_METHOD("get_latest_state_tick"), &_RollbackHistoryTransmitter::get_latest_state_tick);
 	ClassDB::bind_method(D_METHOD("set_predicted_tick", "p_is_predicted_tick"), &_RollbackHistoryTransmitter::set_predicted_tick);

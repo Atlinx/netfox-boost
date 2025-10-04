@@ -7,11 +7,6 @@
 
 Ref<_NetfoxLogger> _PropertySnapshot::_logger;
 
-void _PropertySnapshot::_static_init()
-{
-	_logger = _NetfoxLogger::for_netfox("_PropertySnapshot");
-}
-
 Dictionary _PropertySnapshot::as_dictionary()
 {
 	return _snapshot.duplicate();
@@ -19,10 +14,10 @@ Dictionary _PropertySnapshot::as_dictionary()
 
 Ref<_PropertySnapshot> _PropertySnapshot::from_dictionary(Dictionary data)
 {
-	return _new(data);
+	return new_(data);
 }
 
-Ref<_PropertySnapshot> _PropertySnapshot::_new(Dictionary p_snapshot)
+Ref<_PropertySnapshot> _PropertySnapshot::new_(Dictionary p_snapshot)
 {
 	Ref<_PropertySnapshot> ref;
 	ref.instantiate();
@@ -142,8 +137,11 @@ Ref<_PropertySnapshot> _PropertySnapshot::extract(TypedArray<PropertyEntry> prop
 	return from_dictionary(result);
 }
 
-void _PropertySnapshot::_bind_methods() {
-	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("new", "p_snapshot"), &_PropertySnapshot::_new);
+void _PropertySnapshot::_bind_methods() 
+{
+	_logger = _NetfoxLogger::for_netfox("_PropertySnapshot");
+
+	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("new_", "p_snapshot"), &_PropertySnapshot::new_);
 	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("from_dictionary", "data"), &_PropertySnapshot::from_dictionary);
 	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("extract", "properties"), &_PropertySnapshot::extract);
 	

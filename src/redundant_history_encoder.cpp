@@ -7,11 +7,6 @@
 
 Ref<_NetfoxLogger> _RedundantHistoryEncoder::_logger;
 
-void _RedundantHistoryEncoder::_static_init()
-{
-	 _logger = _NetfoxLogger::for_netfox("_RedundantHistoryEncoder");
-}
-
 int _RedundantHistoryEncoder::get_redundancy()
 {
 	return _redundancy;
@@ -88,7 +83,7 @@ TypedArray<_PropertySnapshot> _RedundantHistoryEncoder::decode(Array data, Typed
 	TypedArray<_PropertySnapshot> result = Array();
 	int redundancy = data.size() / properties.size();
 	for (int i = 0; i < redundancy; ++i)
-		result.append(_PropertySnapshot::_new());
+		result.append(_PropertySnapshot::new_());
 	
 	for(int i=0; i<data.size(); i+=1)
 	{
@@ -106,7 +101,7 @@ TypedArray<_PropertySnapshot> _RedundantHistoryEncoder::decode(Array data, Typed
 
 int _RedundantHistoryEncoder::apply(int tick, TypedArray<_PropertySnapshot> snapshots, int sender)
 {
-	int earliest_new_tick =  - 1;
+	int earliest_new_tick = -1;
 
 	for(int i=0; i<snapshots.size(); i+=1)
 	{
@@ -143,7 +138,7 @@ int _RedundantHistoryEncoder::apply(int tick, TypedArray<_PropertySnapshot> snap
 	return earliest_new_tick;
 }
 
-Ref<_RedundantHistoryEncoder> _RedundantHistoryEncoder::_new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
+Ref<_RedundantHistoryEncoder> _RedundantHistoryEncoder::new_(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
 {
 	Ref<_RedundantHistoryEncoder> ref;
 	ref.instantiate();
@@ -152,14 +147,17 @@ Ref<_RedundantHistoryEncoder> _RedundantHistoryEncoder::_new(Ref<_PropertyHistor
 	return ref;
 }
 
-void _RedundantHistoryEncoder::_bind_methods() {
-	ClassDB::bind_static_method("_RedundantHistoryEncoder", D_METHOD("_new", "p_history", "p_property_cache"), &_RedundantHistoryEncoder::_new);
+void _RedundantHistoryEncoder::_bind_methods() 
+{
+	 _logger = _NetfoxLogger::for_netfox("_RedundantHistoryEncoder");
+
+	ClassDB::bind_static_method("_RedundantHistoryEncoder", D_METHOD("new_", "p_history", "p_property_cache"), &_RedundantHistoryEncoder::new_);
 	ClassDB::bind_method(D_METHOD("get_redundancy"), &_RedundantHistoryEncoder::get_redundancy);
 	ClassDB::bind_method(D_METHOD("set_redundancy", "p_redundancy"), &_RedundantHistoryEncoder::set_redundancy);
 	ClassDB::bind_method(D_METHOD("set_properties", "properties"), &_RedundantHistoryEncoder::set_properties);
 	ClassDB::bind_method(D_METHOD("encode", "tick", "properties"), &_RedundantHistoryEncoder::encode);
 	ClassDB::bind_method(D_METHOD("decode", "data", "properties"), &_RedundantHistoryEncoder::decode);
-	ClassDB::bind_method(D_METHOD("apply", "tick", "snapshots", "sender"), &_RedundantHistoryEncoder::apply);
+	ClassDB::bind_method(D_METHOD("apply", "tick", "snapshots", "sender"), &_RedundantHistoryEncoder::apply, DEFVAL(0));
 	
 	ClassDB::add_property(get_class_static(), PropertyInfo(Variant::INT, "redundancy"), "set_redundancy", "get_redundancy");
 }

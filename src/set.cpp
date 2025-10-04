@@ -2,7 +2,7 @@
 
 #include <godot_cpp/core/object.hpp>
 
-Ref<_Set> _Set::_new() {
+Ref<_Set> _Set::new_() {
 	Ref<_Set> ref;
   ref.instantiate();
   return ref;
@@ -124,7 +124,7 @@ Variant _Set::_iter_get(Array p_iter) const {
 
 void _Set::_bind_methods() {
 	ClassDB::bind_static_method("_Set", D_METHOD("of", "items"), &_Set::of);
-	ClassDB::bind_static_method("_Set", D_METHOD("new"), &_Set::_new);
+	ClassDB::bind_static_method("_Set", D_METHOD("new"), &_Set::new_);
 
 	ClassDB::bind_method(D_METHOD("add", "value"), &_Set::add);
 	ClassDB::bind_method(D_METHOD("has", "value"), &_Set::has);

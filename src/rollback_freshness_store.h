@@ -17,7 +17,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	static Ref<RollbackFreshnessStore> _new();
+	static Ref<RollbackFreshnessStore> new_();
 
 	RollbackFreshnessStore() = default;
 	~RollbackFreshnessStore() override = default;

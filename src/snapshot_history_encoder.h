@@ -31,11 +31,10 @@ public:
 	_SnapshotHistoryEncoder() = default;
 	~_SnapshotHistoryEncoder() override = default;
 
-	static void _static_init();
-	static Ref<_SnapshotHistoryEncoder> _new(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
+	static Ref<_SnapshotHistoryEncoder> new_(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
 
 	void set_properties(Array properties);
 	Array encode(int tick, TypedArray<PropertyEntry> properties);
 	Ref<_PropertySnapshot> decode(Array data, TypedArray<PropertyEntry> properties);
-	bool apply(int tick, Ref<_PropertySnapshot> snapshot, int sender =  - 1);
+	bool apply(int tick, Ref<_PropertySnapshot> snapshot, int sender = -1);
 };

@@ -24,7 +24,7 @@ public:
 	~_Set() override = default;
 
 	static Ref<_Set> of(const Array& p_items);
-	static Ref<_Set> _new();
+	static Ref<_Set> new_();
 
 	void add(const Variant& p_value);
 	bool has(const Variant& p_value) const;
