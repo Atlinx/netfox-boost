@@ -10,6 +10,19 @@
 
 using namespace godot;
 
+class _SetIterator : public RefCounted {
+	GDCLASS(_SetIterator, RefCounted);
+
+	protected:
+		static void _bind_methods();
+
+	public:
+		_SetIterator() = default;
+		~_SetIterator() override = default;
+
+		HashSet<Variant, VariantHasher>::Iterator iterator;
+};
+
 class _Set : public RefCounted {
 	GDCLASS(_Set, RefCounted);
 
@@ -39,7 +52,7 @@ public:
 	
 	bool _iter_init(Array p_iter);
 	bool _iter_next(Array p_iter);
-	Variant _iter_get(int p_iter) const;
+	Variant _iter_get(Ref<_SetIterator> p_iter) const;
 
 	String _to_string() const;
 };

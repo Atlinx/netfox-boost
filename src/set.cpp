@@ -2,13 +2,15 @@
 
 #include <godot_cpp/core/object.hpp>
 
-Ref<_Set> _Set::new_() {
+Ref<_Set> _Set::new_() 
+{
 	Ref<_Set> ref;
   ref.instantiate();
   return ref;
 }
 
-Ref<_Set> _Set::of(const Array& p_items) {
+Ref<_Set> _Set::of(const Array& p_items) 
+{
 	Ref<_Set> ref;
 	ref.instantiate();
 	for (auto item : p_items)
@@ -16,31 +18,38 @@ Ref<_Set> _Set::of(const Array& p_items) {
 	return ref;
 }
 
-void _Set::add(const Variant& p_value) {
+void _Set::add(const Variant& p_value) 
+{
 	_data.insert(p_value);
 }
 
-bool _Set::has(const Variant& p_value) const {
+bool _Set::has(const Variant& p_value) const 
+{
 	return _data.has(p_value);
 }
 
-int _Set::size() const {
+int _Set::size() const 
+{
 	return _data.size();
 }
 
-bool _Set::is_empty() const {
+bool _Set::is_empty() const 
+{
 	return _data.is_empty();
 }
 
-bool _Set::erase(const Variant& p_value) {
+bool _Set::erase(const Variant& p_value) 
+{
 	return _data.erase(p_value);
 }
 
-void _Set::clear() {
+void _Set::clear() 
+{
 	_data.clear();
 }
 
-Array _Set::values() const {
+Array _Set::values() const 
+{
   Array res;
   res.resize(_data.size());
   int i = 0;
@@ -52,29 +61,32 @@ Array _Set::values() const {
 	return res;
 }
 
-Variant _Set::min() const {
+Variant _Set::min() const 
+{
   if (_data.is_empty()) {
     return Variant();
   }
   Variant smallest = *_data.begin();
   for (auto data : _data)
-    if (smallest < (Variant) data)
+    if ((Variant) data < smallest)
       smallest = data;
 	return smallest;
 }
 
-Variant _Set::max() const {
+Variant _Set::max() const 
+{
   if (_data.is_empty()) {
     return Variant();
   }
   Variant largest = *_data.begin();
   for (auto data : _data)
-    if ((Variant) data < largest)
+    if (largest < (Variant) data)
       largest = data;
 	return largest;
 }
 
-bool _Set::equals(const Ref<_Set>& p_other) const {
+bool _Set::equals(const Ref<_Set>& p_other) const 
+{
 	if (p_other.is_null())
 		return false;
 
@@ -89,44 +101,39 @@ bool _Set::equals(const Ref<_Set>& p_other) const {
 	return true;
 }
 
-String _Set::_to_string() const {
+String _Set::_to_string() const 
+{
 	return "Set: [" + String(", ").join(values()) + "]";
 }
 
-bool _Set::_iter_init(Array p_iter) {
-	print_line("_iter_init: ", p_iter);
+bool _Set::_iter_init(Array p_iter) 
+{
 	if (_data.is_empty()) {
 		return false;
 	}
-	p_iter[0] = 0;
+	Ref<_SetIterator> iter;
+	iter.instantiate();
+	iter->iterator = _data.begin();
+	p_iter[0] = iter;
   return true;
 }
 
-bool _Set::_iter_next(Array p_iter) {
-	print_line("_iter_next: ", p_iter);
-  int curr_idx = p_iter[0];
-	if (curr_idx >= 0 && curr_idx < _data.size() - 1) {
-		p_iter[0] = curr_idx + 1;
-    return true;
-	}
+bool _Set::_iter_next(Array p_iter) 
+{
+	Ref<_SetIterator> iterator = p_iter[0];
+	++iterator->iterator;
+	if (iterator->iterator)
+		return true;
   return false;
 }
 
-Variant _Set::_iter_get(int p_iter) const {
-	print_line("_iter_get: ", p_iter);
-  int curr_idx = p_iter;
-  if (curr_idx >= 0 && curr_idx < _data.size()) {
-    auto it = _data.begin();
-    while (curr_idx > 0) {
-      --curr_idx;
-      ++it;
-    }
-    return *it;
-  }
-  return Variant();
+Variant _Set::_iter_get(Ref<_SetIterator> p_iter) const 
+{
+	return *p_iter->iterator;
 }
 
-void _Set::_bind_methods() {
+void _Set::_bind_methods() 
+{
 	ClassDB::bind_static_method("_Set", D_METHOD("of", "items"), &_Set::of);
 
 	ClassDB::bind_method(D_METHOD("add", "value"), &_Set::add);
@@ -145,4 +152,9 @@ void _Set::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_iter_get", "iter"), &_Set::_iter_get);
 
 	ClassDB::bind_method(D_METHOD("_to_string"), &_Set::_to_string);
+}
+
+void _SetIterator::_bind_methods()
+{
+
 }

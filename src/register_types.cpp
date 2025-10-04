@@ -43,6 +43,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(_RollbackHistoryRecorder);
 	GDREGISTER_CLASS(_RollbackHistoryTransmitter);
 	GDREGISTER_CLASS(RollbackFreshnessStore);
+	GDREGISTER_CLASS(_SetIterator);
 	GDREGISTER_CLASS(_Set);
 }
 
