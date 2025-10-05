@@ -127,14 +127,17 @@ jobs:
       - name: Build Package
         shell: sh
         run: |
-          mkdir -p ./netfox/bin
-          mv ./demo/addons/netfox/* ./netfox
-          mv ./netfox/bin/netfox-boost.gdextension ./netfox-boost-bin/
-          rm -rf ./netfox/bin
-          mv ./netfox-boost-bin ./netfox/bin
+          mkdir ./netfox-boost/netfox/bin
+          mv ./demo/addons/netfox/* ./netfox-boost/netfox
+          mv ./netfox-boost/netfox/bin/netfox-boost.gdextension ./netfox-boost-bin/
+          rm -rf ./netfox-boost/netfox/bin
+          mv ./netfox-boost-bin ./netfox-boost/netfox/bin
+          mv ./demo/addons/netfox.extras ./netfox-boost/netfox.extras
+          mv ./demo/addons/netfox.noray ./netfox-boost/netfox.noray
+          mv ./demo/addons/netfox.extras ./netfox-boost/netfox.extras
           
       - name: Upload Final Package Artifact
         uses: actions/upload-artifact@v4
         with:
           name: netfox-boost
-          path: ./netfox
+          path: ./netfox-boost

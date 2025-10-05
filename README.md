@@ -10,7 +10,8 @@ This addon is an addon for implementing rollback netcode in Godot. This is based
 
 ## Installation
 
-Download the `demo/addons/netfox` folder, and add it to your project.
+Download the `netfox` zip from the latest [GitHub action](https://github.com/Atlinx/netfox-boost/actions) or from the [Releases](https://github.com/Atlinx/netfox-boost/releases) page. Extract the contents and add them to the `res://addons/` directory of your project. 
+If you already have netfox installed, make sure to remove the `netfox.internals` addon because its functionality is baked into the netfox-boost GDExtension.
 
 ## Development
 
