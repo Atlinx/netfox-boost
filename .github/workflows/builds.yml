@@ -117,6 +117,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          path: repo
 
       - name: Download Merged Artifact
         uses: actions/download-artifact@v4
@@ -127,8 +128,10 @@ jobs:
       - name: Build Package
         shell: sh
         run: |
+          sudo apt install tree
           mkdir -p ./netfox-boost/netfox/bin
-          mv ./demo/addons/netfox* ./netfox-boost/netfox/
+          mv ./repo/demo/addons/netfox* ./netfox-boost/netfox/
+          tree
           mv ./netfox-boost/netfox/bin/netfox-boost.gdextension ./netfox-boost-bin/
           rm -rf ./netfox-boost/netfox/bin
           mv ./netfox-boost-bin ./netfox-boost/netfox/bin
