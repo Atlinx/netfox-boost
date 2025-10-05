@@ -22,7 +22,11 @@ public:
 protected:
 	Dictionary _snapshot = Dictionary();
 
-	static Ref<_NetfoxLogger> _logger;
+	static Ref<_NetfoxLogger> _logger()
+	{
+		static Ref<_NetfoxLogger> ref = _NetfoxLogger::for_netfox("_PropertySnapshot");
+		return ref;
+	}
 	static void _bind_methods();
 
 public:

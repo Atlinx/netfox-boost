@@ -7,8 +7,8 @@
 
 using namespace godot;
 
-class NetfoxBoost : public Node {
-	GDCLASS(NetfoxBoost, Node)
+class CPPTest : public Node {
+	GDCLASS(CPPTest, Node)
 
 protected:
 	static void _bind_methods();
@@ -16,12 +16,14 @@ protected:
 	String my_string;
 
 public:
-	NetfoxBoost();
-	~NetfoxBoost() override = default;
+	CPPTest();
+	~CPPTest() override = default;
 
 	void print_type(Variant p_variant);
 	void test_rpc(String msg);
 	void rpc_receive(String msg);
+	Node* test_get_autoload(String autoload);
+	Variant test_get_autoload_value(String autoload, String field);
 
 	void set_my_string(String);
 	String get_my_string();

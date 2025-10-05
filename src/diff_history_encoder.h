@@ -30,7 +30,12 @@ protected:
 	uint8_t _version = 0;
 	bool _has_received = false;
 
-	static Ref<_NetfoxLogger> _logger;
+	static Ref<_NetfoxLogger> _logger() 
+	{
+		static Ref<_NetfoxLogger> ref = _NetfoxLogger::for_netfox("DiffHistoryEncoder");
+		return ref;
+	}
+	
 	static void _bind_methods();
 
 public:
@@ -39,9 +44,9 @@ public:
 
 	static Ref<_DiffHistoryEncoder> new_(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache);
 
-	void add_properties(Array properties);
-	PackedByteArray encode(int tick, int reference_tick, Array properties);
-	Ref<_PropertySnapshot> decode(PackedByteArray data, Array properties);
+	void add_properties(TypedArray<PropertyEntry> properties);
+	PackedByteArray encode(int tick, int reference_tick, TypedArray<PropertyEntry> properties);
+	Ref<_PropertySnapshot> decode(PackedByteArray data, TypedArray<PropertyEntry> properties);
 
 // TODO: Rework metrics so these are not needed
 	bool apply(int tick, Ref<_PropertySnapshot> snapshot, int reference_tick, int sender = -1);

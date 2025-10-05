@@ -23,7 +23,7 @@ class _RollbackHistoryTransmitter : public Node {
 	GDCLASS(_RollbackHistoryTransmitter, Node);
 
 protected:
-	Node* root;
+	Node* root = nullptr;
 	bool enable_input_broadcast = true;
 	int full_state_interval;
 	int diff_ack_interval;
@@ -31,7 +31,7 @@ protected:
 // Provided externally by RBS
 	Ref<_PropertyHistoryBuffer> _state_history;
 	Ref<_PropertyHistoryBuffer> _input_history;
-	PeerVisibilityFilter* _visibility_filter;
+	PeerVisibilityFilter* _visibility_filter = nullptr;
 
 	Ref<_PropertyConfig> _state_property_config;
 	Ref<_PropertyConfig> _input_property_config;
@@ -58,7 +58,11 @@ protected:
 // Signals
 	/* signal _on_transmit_state(Dictionary state, int tick) */
 
-	static Ref<_NetfoxLogger> _logger;
+	static Ref<_NetfoxLogger> _logger()
+	{
+		static Ref<_NetfoxLogger> ref = _NetfoxLogger::for_netfox("_RollbackHistoryTransmitter");
+		return ref;
+	}
 	static void _bind_methods();
 
 public:

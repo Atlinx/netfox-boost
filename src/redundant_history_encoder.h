@@ -26,7 +26,11 @@ protected:
 	int _version = 0;
 	bool _has_received = false;
 
-	static Ref<_NetfoxLogger> _logger;
+	static Ref<_NetfoxLogger> _logger()
+	{
+		static Ref<_NetfoxLogger> ref = _NetfoxLogger::for_netfox("_RedundantHistoryEncoder");
+		return ref;
+	}
 	static void _bind_methods();
 
 public:

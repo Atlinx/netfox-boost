@@ -5,8 +5,6 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-Ref<_NetfoxLogger> PropertyEntry::_logger;
-
 // Getters and Setters implementation
 String PropertyEntry::get_path() const
 {
@@ -96,7 +94,7 @@ String PropertyEntry::make_path(Node* root, Variant node, String property)
 	}
 	else
 	{
-		_logger->error(vformat("Can't stringify node reference: %s", node));
+		_logger()->error(vformat("Can't stringify node reference: %s", node));
 		return "";
 	}
 
@@ -110,8 +108,6 @@ String PropertyEntry::make_path(Node* root, Variant node, String property)
 
 void PropertyEntry::_bind_methods()
 {
-	_logger = _NetfoxLogger::for_netfox("PropertyEntry");
-
 	ClassDB::bind_static_method("PropertyEntry", D_METHOD("parse", "root", "path"), &PropertyEntry::parse);
 	ClassDB::bind_static_method("PropertyEntry", D_METHOD("make_path", "root", "node", "property"), &PropertyEntry::make_path);
 

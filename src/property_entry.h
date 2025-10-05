@@ -15,7 +15,11 @@ class PropertyEntry : public RefCounted {
 public:
 
 protected:
-	static Ref<_NetfoxLogger> _logger;
+	static Ref<_NetfoxLogger> _logger()
+	{
+		static Ref<_NetfoxLogger> ref = _NetfoxLogger::for_netfox("PropertyEntry");
+		return ref;
+	}
 	static void _bind_methods();
 
 public:
@@ -27,7 +31,7 @@ public:
 
 	// Original fields
 	String path;
-	Node* node;
+	Node* node = nullptr;
 	String property;
 
 	String get_path() const;

@@ -5,8 +5,6 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-Ref<_NetfoxLogger> _RedundantHistoryEncoder::_logger;
-
 int _RedundantHistoryEncoder::get_redundancy()
 {
 	return _redundancy;
@@ -16,7 +14,7 @@ void _RedundantHistoryEncoder::set_redundancy(int p_redundancy)
 {
 	if(p_redundancy <= 0)
 	{
-		_logger->warning(vformat("Attempting to set redundancy to %d, which would send no data!", p_redundancy));
+		_logger()->warning(vformat("Attempting to set redundancy to %d, which would send no data!", p_redundancy));
 		return ;
 	}
 
@@ -75,7 +73,7 @@ TypedArray<_PropertySnapshot> _RedundantHistoryEncoder::decode(Array data, Typed
 		else
 		{
 			// Version mismatch, can't parse
-			_logger->warning(vformat("Version mismatch! own: %d, received: %s", _version, packet_version));
+			_logger()->warning(vformat("Version mismatch! own: %d, received: %s", _version, packet_version));
 			return Array();
 		}
 	}
@@ -111,7 +109,7 @@ int _RedundantHistoryEncoder::apply(int tick, TypedArray<_PropertySnapshot> snap
 		if(offset_tick < (int) Utils::get_autoload("NetworkRollback")->get("history_start"))
 		{
 			// Data too old
-			_logger->warning(vformat("Received data for %s, rejecting because older than %s frames", offset_tick, Utils::get_autoload("NetworkRollback")->get("history_limit")));
+			_logger()->warning(vformat("Received data for %s, rejecting because older than %s frames", offset_tick, Utils::get_autoload("NetworkRollback")->get("history_limit")));
 			continue;
 		}
 
@@ -121,7 +119,7 @@ int _RedundantHistoryEncoder::apply(int tick, TypedArray<_PropertySnapshot> snap
 			if(snapshot->is_empty())
 			{
 				// No valid properties ( probably after sanitize )
-				_logger->warning(vformat("Received invalid data from %d for tick %d", sender, tick));
+				_logger()->warning(vformat("Received invalid data from %d for tick %d", sender, tick));
 				continue;
 			}
 		}
@@ -149,8 +147,6 @@ Ref<_RedundantHistoryEncoder> _RedundantHistoryEncoder::new_(Ref<_PropertyHistor
 
 void _RedundantHistoryEncoder::_bind_methods() 
 {
-	 _logger = _NetfoxLogger::for_netfox("_RedundantHistoryEncoder");
-
 	ClassDB::bind_static_method("_RedundantHistoryEncoder", D_METHOD("new_", "p_history", "p_property_cache"), &_RedundantHistoryEncoder::new_);
 	ClassDB::bind_method(D_METHOD("get_redundancy"), &_RedundantHistoryEncoder::get_redundancy);
 	ClassDB::bind_method(D_METHOD("set_redundancy", "p_redundancy"), &_RedundantHistoryEncoder::set_redundancy);
@@ -159,6 +155,6 @@ void _RedundantHistoryEncoder::_bind_methods()
 	ClassDB::bind_method(D_METHOD("decode", "data", "properties"), &_RedundantHistoryEncoder::decode);
 	ClassDB::bind_method(D_METHOD("apply", "tick", "snapshots", "sender"), &_RedundantHistoryEncoder::apply, DEFVAL(0));
 	
-	ClassDB::add_property(get_class_static(), PropertyInfo(Variant::INT, "redundancy"), "set_redundancy", "get_redundancy");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "redundancy"), "set_redundancy", "get_redundancy");
 }
 

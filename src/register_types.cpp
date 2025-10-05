@@ -5,7 +5,7 @@
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
 
-#include "netfox_boost.h"
+#include "test.h"
 #include "logger.h"
 #include "property_cache.h"
 #include "property_config.h"
@@ -26,11 +26,13 @@ using namespace godot;
 
 void initialize_gdextension_types(ModuleInitializationLevel p_level)
 {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
+	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) 
 		return;
-	}
-	GDREGISTER_CLASS(NetfoxBoost);
 	GDREGISTER_CLASS(_NetfoxLogger);
+	GDREGISTER_CLASS(_SetIterator);
+	GDREGISTER_CLASS(_Set);
+	GDREGISTER_CLASS(_BiMapIterator);
+	GDREGISTER_CLASS(_BiMap);
 	GDREGISTER_CLASS(PropertyEntry);
 	GDREGISTER_CLASS(PropertyCache);
 	GDREGISTER_CLASS(_PropertyConfig);
@@ -44,16 +46,13 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(_RollbackHistoryRecorder);
 	GDREGISTER_CLASS(_RollbackHistoryTransmitter);
 	GDREGISTER_CLASS(RollbackFreshnessStore);
-	GDREGISTER_CLASS(_SetIterator);
-	GDREGISTER_CLASS(_Set);
-	GDREGISTER_CLASS(_BiMapIterator);
-	GDREGISTER_CLASS(_BiMap);
+	GDREGISTER_CLASS(CPPTest);
 }
 
-void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
+void uninitialize_gdextension_types(ModuleInitializationLevel p_level) 
+{
+	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE)
 		return;
-	}
 }
 
 extern "C"

@@ -6,8 +6,6 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-Ref<_NetfoxLogger> _SnapshotHistoryEncoder::_logger;
-
 Ref<_SnapshotHistoryEncoder> _SnapshotHistoryEncoder::new_(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
 {	
 	Ref<_SnapshotHistoryEncoder> ref;
@@ -57,14 +55,14 @@ Ref<_PropertySnapshot> _SnapshotHistoryEncoder::decode(Array data, TypedArray<Pr
 		else
 		{
 			// Version mismatch, can't parse
-			_logger->warning(vformat("Version mismatch! own: %d, received: %s", _version, packet_version));
+			_logger()->warning(vformat("Version mismatch! own: %d, received: %s", _version, packet_version));
 			return result;
 		}
 	}
 
 	if(properties.size() != data.size())
 	{
-		_logger->warning(vformat("Received snapshot with %d entries, with %d known - parsing as much as possible", data.size(), properties.size()));
+		_logger()->warning(vformat("Received snapshot with %d entries, with %d known - parsing as much as possible", data.size(), properties.size()));
 	}
 
 	for(int i=0; i< Math::min(data.size(), properties.size()); i+=1)
@@ -83,7 +81,7 @@ bool _SnapshotHistoryEncoder::apply(int tick, Ref<_PropertySnapshot> snapshot, i
 	if(tick < (int) network_rollback->get("history_start"))
 	{
 		// State too old!
-		_logger->error(vformat("Received full snapshot for %s, rejecting because older than %s frames", tick, network_rollback->get("history_limit")));
+		_logger()->error(vformat("Received full snapshot for %s, rejecting because older than %s frames", tick, network_rollback->get("history_limit")));
 		return false;
 	}
 
@@ -101,8 +99,6 @@ bool _SnapshotHistoryEncoder::apply(int tick, Ref<_PropertySnapshot> snapshot, i
 
 void _SnapshotHistoryEncoder::_bind_methods() 
 {
-	_logger = _NetfoxLogger::for_netfox("_SnapshotHistoryEncoder");
-
 	ClassDB::bind_static_method("_SnapshotHistoryEncoder", D_METHOD("new_", "p_history", "p_property_cache"), &_SnapshotHistoryEncoder::new_);
 	ClassDB::bind_method(D_METHOD("set_properties", "properties"), &_SnapshotHistoryEncoder::set_properties);
 	ClassDB::bind_method(D_METHOD("encode", "tick", "properties"), &_SnapshotHistoryEncoder::encode);

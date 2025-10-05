@@ -21,7 +21,7 @@ protected:
 	Vector<Ref<PropertyEntry>> _properties;
 	HashMap<int, Vector<Ref<PropertyEntry>>> _auth_properties;
 
-	int local_peer_id;
+	int local_peer_id = 0; // Initialize to 0 (unassigned)
 
 	static void _bind_methods();
 
@@ -33,7 +33,10 @@ public:
 
 	void set_properties(TypedArray<PropertyEntry> p_properties);
 	void set_properties_from_paths(Array property_paths, Ref<PropertyCache> property_cache);
-	TypedArray<PropertyEntry> get_properties();
+	TypedArray<PropertyEntry> get_properties() const;
 	TypedArray<PropertyEntry> get_owned_properties();
 	TypedArray<PropertyEntry> get_properties_owned_by(int peer);
+
+	void set_local_peer_id(int p_id);
+	int get_local_peer_id() const;
 };

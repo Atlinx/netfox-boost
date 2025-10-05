@@ -8,8 +8,6 @@
 #include <godot_cpp/classes/multiplayer_api.hpp>
 #include <godot_cpp/classes/multiplayer_peer.hpp>
 
-Ref<_NetfoxLogger> _RollbackHistoryTransmitter::_logger;
-
 int _RollbackHistoryTransmitter::get_earliest_input_tick()
 {
 	return _earliest_input_tick;
@@ -317,7 +315,7 @@ void _RollbackHistoryTransmitter::_ack_full_state(int tick)
 	int sender_id = get_multiplayer()->get_remote_sender_id();
 	_ackd_state[sender_id] = tick;
 
-	_logger->trace(vformat("Peer %d ack'd full state for tick %d", sender_id, tick));
+	_logger()->trace(vformat("Peer %d ack'd full state for tick %d", sender_id, tick));
 }
 
 void _RollbackHistoryTransmitter::_ack_diff_state(int tick)
@@ -325,7 +323,7 @@ void _RollbackHistoryTransmitter::_ack_diff_state(int tick)
 	int sender_id = get_multiplayer()->get_remote_sender_id();
 	_ackd_state[sender_id] = tick;
 
-	_logger->trace(vformat("Peer %d ack'd diff state for tick %d", sender_id, tick));
+	_logger()->trace(vformat("Peer %d ack'd diff state for tick %d", sender_id, tick));
 }
 
 TypedArray<PropertyEntry> _RollbackHistoryTransmitter::_get_recorded_state_props()
@@ -383,8 +381,6 @@ _RollbackHistoryTransmitter::_RollbackHistoryTransmitter()
 
 void _RollbackHistoryTransmitter::_bind_methods() 
 {
-	_logger = _NetfoxLogger::for_netfox("_RollbackHistoryTransmitter");
-
 	ClassDB::bind_method(D_METHOD("configure", "p_input_history", "p_state_property_config", "p_input_property_config", "p_visibility_filter", "p_property_cache", "p_skipset"), &_RollbackHistoryTransmitter::configure);
 	ClassDB::bind_method(D_METHOD("get_earliest_input_tick"), &_RollbackHistoryTransmitter::get_earliest_input_tick);
 	ClassDB::bind_method(D_METHOD("get_latest_state_tick"), &_RollbackHistoryTransmitter::get_latest_state_tick);

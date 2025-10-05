@@ -7,8 +7,6 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/classes/stream_peer_buffer.hpp>
 
-Ref<_NetfoxLogger> _DiffHistoryEncoder::_logger;
-
 Ref<_DiffHistoryEncoder> _DiffHistoryEncoder::new_(Ref<_PropertyHistoryBuffer> p_history, Ref<PropertyCache> p_property_cache)
 {	
 	Ref<_DiffHistoryEncoder> ref;
@@ -18,13 +16,12 @@ Ref<_DiffHistoryEncoder> _DiffHistoryEncoder::new_(Ref<_PropertyHistoryBuffer> p
 	return ref;
 }
 
-void _DiffHistoryEncoder::add_properties(Array properties)
+void _DiffHistoryEncoder::add_properties(TypedArray<PropertyEntry> properties)
 {
 	bool has_new_properties = false;
 
-	for(int i = 0; i < properties.size(); ++i)
+	for(Ref<PropertyEntry> property_entry : properties)
 	{
-		Ref<PropertyEntry> property_entry = properties[i];
 		bool is_new = _ensure_property_idx(property_entry->_to_string());
 		has_new_properties = has_new_properties || is_new;
 	}
@@ -34,7 +31,7 @@ void _DiffHistoryEncoder::add_properties(Array properties)
 		_version = (_version + 1) % 256;
 }
 
-PackedByteArray _DiffHistoryEncoder::encode(int tick, int reference_tick, Array properties)
+PackedByteArray _DiffHistoryEncoder::encode(int tick, int reference_tick, TypedArray<PropertyEntry> properties)
 {
 	ERR_FAIL_COND_V_MSG(properties.size() > 255, PackedByteArray(), "Property indices may not fit into bytes!");
 
@@ -52,10 +49,8 @@ PackedByteArray _DiffHistoryEncoder::encode(int tick, int reference_tick, Array 
 	buffer.instantiate();
 	buffer->put_u8(_version);
 
-	TypedArray<String> diff_properties = diff_snapshot->properties();
-	for(int i = 0; i < diff_properties.size(); ++i)
+	for(String property : diff_snapshot->properties())
 	{
-		String property = diff_properties[i];
 		int property_idx = _property_indexes.get_by_value(property);
 		Variant property_value = diff_snapshot->get_value(property);
 
@@ -66,7 +61,7 @@ PackedByteArray _DiffHistoryEncoder::encode(int tick, int reference_tick, Array 
 	return buffer->get_data_array();
 }
 
-Ref<_PropertySnapshot> _DiffHistoryEncoder::decode(PackedByteArray data, Array properties)
+Ref<_PropertySnapshot> _DiffHistoryEncoder::decode(PackedByteArray data, TypedArray<PropertyEntry> properties)
 {
 	Ref<_PropertySnapshot> result = _PropertySnapshot::new_();
 
@@ -89,7 +84,7 @@ Ref<_PropertySnapshot> _DiffHistoryEncoder::decode(PackedByteArray data, Array p
 		else
 		{
 			// Since we don't remove entries, only add, we can still parse what we can
-			_logger->warning(vformat("Property config version mismatch - own %d != received %d", _version, packet_version));
+			_logger()->warning(vformat("Property config version mismatch - own %d != received %d", _version, packet_version));
 		}
 	}
 
@@ -97,11 +92,11 @@ Ref<_PropertySnapshot> _DiffHistoryEncoder::decode(PackedByteArray data, Array p
 
 	while(buffer->get_available_bytes() > 0)
 	{
-		Variant property_idx = buffer->get_u8();
+		int property_idx = buffer->get_u8();
 		Variant property_value = buffer->get_var();
 		if(!_property_indexes.has_key(property_idx))
 		{
-			_logger->warning(vformat("Received unknown property index %d, ignoring!", property_idx));
+			_logger()->warning(vformat("Received unknown property index %d, ignoring!", property_idx));
 			continue;
 		}
 
@@ -117,7 +112,7 @@ bool _DiffHistoryEncoder::apply(int tick, Ref<_PropertySnapshot> snapshot, int r
 	if(tick < (int) Utils::get_autoload("NetworkRollback")->get("history_start"))
 	{
 		// State too old!
-		_logger->error(vformat("Received diff snapshot for @%d, rejecting because older than %s frames", tick, Utils::get_autoload("NetworkRollback")->get("history_limit")));
+		_logger()->error(vformat("Received diff snapshot for @%d, rejecting because older than %s frames", tick, Utils::get_autoload("NetworkRollback")->get("history_limit")));
 		return false;
 	}
 
@@ -129,7 +124,7 @@ bool _DiffHistoryEncoder::apply(int tick, Ref<_PropertySnapshot> snapshot, int r
 		snapshot->sanitize(sender, _property_cache);
 		if(snapshot->is_empty())
 		{
-			_logger->warning(vformat("Received invalid diff from #%s for @%s", sender, tick));
+			_logger()->warning(vformat("Received invalid diff from #%s for @%s", sender, tick));
 			return false;
 		}
 	}
@@ -137,7 +132,7 @@ bool _DiffHistoryEncoder::apply(int tick, Ref<_PropertySnapshot> snapshot, int r
 	if(!_history->has(reference_tick))
 	{
 		// Reference tick missing, hope for the best
-		_logger->warning(vformat("Reference tick %d missing for #%s applying %d", reference_tick, sender, tick));
+		_logger()->warning(vformat("Reference tick %d missing for #%s applying %d", reference_tick, sender, tick));
 	}
 
 	Ref<_PropertySnapshot> reference_snapshot = _history->get_snapshot(reference_tick);
@@ -175,8 +170,6 @@ bool _DiffHistoryEncoder::_ensure_property_idx(String property)
 
 void _DiffHistoryEncoder::_bind_methods() 
 {
-	_logger = _NetfoxLogger::for_netfox("DiffHistoryEncoder");
-
 	ClassDB::bind_static_method("_DiffHistoryEncoder", D_METHOD("new_", "p_history", "p_property_cache"), &_DiffHistoryEncoder::new_);
 	ClassDB::bind_method(D_METHOD("add_properties", "properties"), &_DiffHistoryEncoder::add_properties);
 	ClassDB::bind_method(D_METHOD("encode", "tick", "reference_tick", "properties"), &_DiffHistoryEncoder::encode);

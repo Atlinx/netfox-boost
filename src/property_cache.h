@@ -17,10 +17,14 @@ class PropertyCache : public RefCounted {
 public:
 
 protected:
-	Node* root;
+	Node* root = nullptr;
 	HashMap<String, Ref<PropertyEntry>> _cache;
 
-	static Ref<_NetfoxLogger> _logger;
+	static Ref<_NetfoxLogger> _logger()
+	{
+		static Ref<_NetfoxLogger> ref = _NetfoxLogger::for_netfox("PropertyCache");
+		return ref;
+	}
 	static void _bind_methods();
 
 public:

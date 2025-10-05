@@ -5,8 +5,6 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-Ref<_NetfoxLogger> _PropertySnapshot::_logger;
-
 Dictionary _PropertySnapshot::as_dictionary()
 {
 	return _snapshot.duplicate();
@@ -120,7 +118,7 @@ void _PropertySnapshot::sanitize(int sender, Ref<PropertyCache> property_cache)
 		if(authority == sender)
 			sanitized[property] = _snapshot[property];
 		else
-			_logger->warning(vformat("Received data for property %s, owned by %s, from sender %s", property, authority, sender));
+			_logger()->warning(vformat("Received data for property %s, owned by %s, from sender %s", property, authority, sender));
 	}
 
 	_snapshot = sanitized;
@@ -139,8 +137,6 @@ Ref<_PropertySnapshot> _PropertySnapshot::extract(TypedArray<PropertyEntry> prop
 
 void _PropertySnapshot::_bind_methods() 
 {
-	_logger = _NetfoxLogger::for_netfox("_PropertySnapshot");
-
 	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("new_", "p_snapshot"), &_PropertySnapshot::new_);
 	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("from_dictionary", "data"), &_PropertySnapshot::from_dictionary);
 	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("extract", "properties"), &_PropertySnapshot::extract);

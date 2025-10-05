@@ -4,8 +4,6 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-Ref<_NetfoxLogger> PropertyCache::_logger;
-
 Ref<PropertyCache> PropertyCache::new_(Node* p_root)
 {
 	Ref<PropertyCache> ref;
@@ -31,7 +29,7 @@ Ref<PropertyEntry> PropertyCache::get_entry(String path)
 		Ref<PropertyEntry> parsed = PropertyEntry::parse(root, path);
 		if(!parsed->is_valid())
 		{
-			_logger->warning(vformat("Invalid property path: %s", path));
+			_logger()->warning(vformat("Invalid property path: %s", path));
 		}
 		_cache[path] = parsed;
 	}
@@ -71,8 +69,6 @@ void PropertyCache::clear()
 
 void PropertyCache::_bind_methods()
 {
-	_logger = _NetfoxLogger::for_netfox("PropertyCache");
-
 	ClassDB::bind_static_method("PropertyCache", D_METHOD("new_", "p_root"), &PropertyCache::new_);
 	ClassDB::bind_method(D_METHOD("get_entry", "path"), &PropertyCache::get_entry);
 	ClassDB::bind_method(D_METHOD("properties"), &PropertyCache::gd_properties);
