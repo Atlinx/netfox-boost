@@ -36,7 +36,7 @@ public:
 	Dictionary as_dictionary();
 	void set_value(String property_path, Variant data);
 	Variant get_value(String property_path);
-	TypedArray<String> _PropertySnapshot::properties();
+	TypedArray<String> properties();
 	bool has(String property_path);
 	int size();
 	bool equals(Ref<_PropertySnapshot> other);
