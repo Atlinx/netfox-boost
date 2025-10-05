@@ -132,6 +132,9 @@ jobs:
           mv ./netfox-boost/netfox/bin/netfox-boost.gdextension ./netfox-boost-bin/
           rm -rf ./netfox-boost/netfox/bin
           mv ./netfox-boost-bin ./netfox-boost/netfox/bin
+          cd demo
+          ls
+          cd ..
           mv ./demo/addons/netfox.extras ./netfox-boost/netfox.extras
           mv ./demo/addons/netfox.noray ./netfox-boost/netfox.noray
           mv ./demo/addons/netfox.extras ./netfox-boost/netfox.extras
