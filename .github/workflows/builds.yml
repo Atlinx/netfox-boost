@@ -128,16 +128,10 @@ jobs:
         shell: sh
         run: |
           mkdir -p ./netfox-boost/netfox/bin
-          mv ./demo/addons/netfox/* ./netfox-boost/netfox
+          mv ./demo/addons/netfox* ./netfox-boost/netfox/
           mv ./netfox-boost/netfox/bin/netfox-boost.gdextension ./netfox-boost-bin/
           rm -rf ./netfox-boost/netfox/bin
           mv ./netfox-boost-bin ./netfox-boost/netfox/bin
-          cd demo/addons
-          ls
-          cd ../..
-          mv ./demo/addons/netfox.extras ./netfox-boost/netfox.extras
-          mv ./demo/addons/netfox.noray ./netfox-boost/netfox.noray
-          mv ./demo/addons/netfox.extras ./netfox-boost/netfox.extras
           
       - name: Upload Final Package Artifact
         uses: actions/upload-artifact@v4
