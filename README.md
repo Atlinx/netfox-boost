@@ -1,11 +1,16 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./press-kit/netfox-banner-hor.svg.preview.png">
+  <source media="(prefers-color-scheme: light)" srcset="./press-kit/netfox-banner-hor-alt.svg.preview.png">
+  <img alt="netfox banner" src="./docs/assets/press-kit/netfox-banner-hor-alt.svg.preview.png">
+</picture>
+
 # 🦊⚡ netfox boost
 
-This repository contains a GDExtension that boosts the performance of [netfox](https://github.com/foxssake/netfox) by running
-repetitive tasks in cpp.
+This addon is an addon for implementing rollback netcode in Godot. This is based on the [netfox](https://github.com/foxssake/netfox), and it uses a GDExtension that boosts the performance by running core functionality in C++. This project aims to be a drop-in replacement for the original netfox addon.
 
 ## Installation
 
-Download the latest files from the releases page.
+Download the `demo/addons/netfox` folder, and add it to your project.
 
 ## Development
 
