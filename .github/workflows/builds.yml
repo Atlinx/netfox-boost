@@ -96,19 +96,43 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: godot-cpp-template-${{ matrix.target.platform }}-${{ matrix.target.arch }}-${{ matrix.float-precision }}-${{ matrix.target-type }}
+          name: netfox-boost-bin-${{ matrix.target.platform }}-${{ matrix.target.arch }}-${{ matrix.float-precision }}-${{ matrix.target-type }}
           path: |
             ${{ github.workspace }}/bin/**
 
-  # Merges all the build artifacts together into a single godot-cpp-template artifact.
+  # Merges all the build artifacts together into a single netfox-boost-bin artifact.
   # If you comment out this step, all the builds will be uploaded individually.
-  merge:
+  package:
     runs-on: ubuntu-22.04
     needs: build
     steps:
       - name: Merge Artifacts
         uses: actions/upload-artifact/merge@v4
         with:
-          name: godot-cpp-template
-          pattern: godot-cpp-template-*
+          name: netfox-boost-bin
+          pattern: netfox-boost-bin-*
           delete-merged: true
+
+      - name: Checkout Repository with Submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Download Merged Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: netfox-boost-bin
+          path: netfox-boost-bin
+
+      - name: Build Package
+        shell: sh
+        run: |
+          mkdir -p ./netfox/bin
+          mv ./demo/addons/netfox/netfox-boost.gdextension ./netfox
+          mv ./netfox-boost-bin/* ./netfox/bin/
+          
+      - name: Upload Final Package Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: netfox-boost
+          path: ./netfox

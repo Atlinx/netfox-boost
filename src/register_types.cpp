@@ -5,7 +5,6 @@
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
 
-#include "test.h"
 #include "logger.h"
 #include "property_cache.h"
 #include "property_config.h"
@@ -46,7 +45,6 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(_RollbackHistoryRecorder);
 	GDREGISTER_CLASS(_RollbackHistoryTransmitter);
 	GDREGISTER_CLASS(RollbackFreshnessStore);
-	GDREGISTER_CLASS(CPPTest);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) 
