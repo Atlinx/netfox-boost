@@ -22,8 +22,6 @@ public:
 	{
 		return ref.is_valid();
 	}
-
-	static String vformatv(const String &p_text, const Array array);
 };
 
 #endif // UTILS_H

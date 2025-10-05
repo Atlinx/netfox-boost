@@ -20,6 +20,7 @@
 #include "rollback_freshness_store.h"
 #include "set.h"
 #include "bimap.h"
+#include "ring_buffer.h"
 
 using namespace godot;
 
@@ -32,6 +33,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(_Set);
 	GDREGISTER_CLASS(_BiMapIterator);
 	GDREGISTER_CLASS(_BiMap);
+	GDREGISTER_CLASS(_RingBuffer);
 	GDREGISTER_CLASS(PropertyEntry);
 	GDREGISTER_CLASS(PropertyCache);
 	GDREGISTER_CLASS(_PropertyConfig);

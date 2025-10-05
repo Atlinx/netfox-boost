@@ -128,7 +128,6 @@ jobs:
         shell: sh
         run: |
           mkdir -p ./netfox/bin
-          ls
           mv ./demo/addons/netfox/* ./netfox
           mv ./netfox/bin/netfox-boost.gdextension ./netfox-boost-bin/
           rm -rf ./netfox/bin
