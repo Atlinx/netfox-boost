@@ -128,8 +128,7 @@ jobs:
       - name: Build Package
         shell: sh
         run: |
-          sudo apt install tree
-          mkdir -p ./netfox-boost/netfox/bin
+          mkdir ./netfox-boost
           mv ./repo/demo/addons/netfox* ./netfox-boost/
           tree
           mv ./netfox-boost/netfox/bin/netfox-boost.gdextension ./netfox-boost-bin/
