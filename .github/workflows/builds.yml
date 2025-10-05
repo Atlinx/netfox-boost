@@ -127,7 +127,7 @@ jobs:
       - name: Build Package
         shell: sh
         run: |
-          mkdir ./netfox-boost/netfox/bin
+          mkdir -p ./netfox-boost/netfox/bin
           mv ./demo/addons/netfox/* ./netfox-boost/netfox
           mv ./netfox-boost/netfox/bin/netfox-boost.gdextension ./netfox-boost-bin/
           rm -rf ./netfox-boost/netfox/bin
