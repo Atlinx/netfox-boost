@@ -45,7 +45,7 @@ protected:
 	Ref<_DiffHistoryEncoder> _diff_state_encoder;
 
 // State
-	Dictionary _ackd_state = Dictionary();
+	Dictionary _ackd_state;
 	int _next_full_state_tick;
 	int _next_diff_ack_tick;
 
@@ -58,11 +58,7 @@ protected:
 // Signals
 	/* signal _on_transmit_state(Dictionary state, int tick) */
 
-	static Ref<_NetfoxLogger> _logger()
-	{
-		static Ref<_NetfoxLogger> ref = _NetfoxLogger::for_netfox("_RollbackHistoryTransmitter");
-		return ref;
-	}
+	static Ref<_NetfoxLogger> _logger;
 	static void _bind_methods();
 
 public:

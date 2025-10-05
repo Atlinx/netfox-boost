@@ -20,13 +20,9 @@ public:
 // Dictionary[String, Variant]
 
 protected:
-	Dictionary _snapshot = Dictionary();
+	Dictionary _snapshot;
 
-	static Ref<_NetfoxLogger> _logger()
-	{
-		static Ref<_NetfoxLogger> ref = _NetfoxLogger::for_netfox("_PropertySnapshot");
-		return ref;
-	}
+	static Ref<_NetfoxLogger> _logger;
 	static void _bind_methods();
 
 public:

@@ -16,19 +16,19 @@ CPPTest::CPPTest()
 
 void CPPTest::print_type(Variant p_variant) 
 {
-	print_line(vformat("Type: %d", p_variant.get_type()));
+	// print_line(vformat("Type: %d", p_variant.get_type()));
 }
 
 void CPPTest::test_rpc(String p_msg) 
 {
-	print_line(vformat("Sending RPC with msg: %s", p_msg));
+	// print_line(vformat("Sending RPC with msg: %s", p_msg));
 
 	rpc("rpc_receive", p_msg);
 }
 
 void CPPTest::rpc_receive(String p_msg) 
 {
-	print_line(vformat("Received RPC with msg: %s", p_msg));
+	// print_line(vformat("Received RPC with msg: %s", p_msg));
 }
 
 void CPPTest::set_my_string(String value)

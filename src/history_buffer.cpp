@@ -21,8 +21,8 @@ void _HistoryBuffer::set_snapshot(int tick, Variant data)
 Dictionary _HistoryBuffer::get_buffer()
 {
 	Dictionary result;
-	for (const KeyValue<int, Variant>& E : _buffer) 
-		result[E.key] = E.value;
+	for (auto key_value : _buffer) 
+		result[key_value.key] = key_value.value;
 	return result;
 }
 
@@ -31,7 +31,7 @@ int _HistoryBuffer::get_earliest_tick()
 	if (_buffer.is_empty())
 		return -1;
 
-	int min_key = std::numeric_limits<int>::max();
+	int min_key = _buffer.begin()->key;
 	for (auto key_value : _buffer)
 	{
 		if (key_value.key < min_key)
@@ -45,7 +45,7 @@ int _HistoryBuffer::get_latest_tick()
 	if (_buffer.is_empty())
 		return -1;
 
-	int max_key = std::numeric_limits<int>::min();
+	int max_key = _buffer.begin()->key;
 	for (auto key_value : _buffer)
 	{
 		if (key_value.key > max_key)
@@ -56,22 +56,21 @@ int _HistoryBuffer::get_latest_tick()
 
 int _HistoryBuffer::get_closest_tick(int tick)
 {
-	if(_buffer.has(tick))
+	if (_buffer.has(tick))
 		return tick;
 
-	if(_buffer.is_empty())
+	if (_buffer.is_empty())
 		return -1;
 
 	int earliest_tick = get_earliest_tick();
-	if(tick < earliest_tick)
+	if (tick < earliest_tick)
 		return earliest_tick;
 
 	int latest_tick = get_latest_tick();
-	if(tick > latest_tick)
+	if (tick > latest_tick)
 		return latest_tick;
 
-	int max_key = -1;
-	
+	int max_key = _buffer.begin()->key;
 	for (auto key_value : _buffer)
 	{
 		if (key_value.key < tick && key_value.key > max_key)
@@ -84,22 +83,23 @@ int _HistoryBuffer::get_closest_tick(int tick)
 Variant _HistoryBuffer::get_history(int tick)
 {
 	int closest_tick = get_closest_tick(tick);
+	// print_line("_HistoryBuffer::get_history: tick: ", tick, " closest tick: ", closest_tick);
 	if (_buffer.has(closest_tick))
 		return _buffer[closest_tick];
+	// print_line("  '- HISTORY BUFFER CANNOT FIND ENTRY");
 	return Variant();
 }
 
 void _HistoryBuffer::trim(int earliest_tick_to_keep)
 {
-	// Must iterate over a copy of keys, as we are modifying the HashMap
 	Vector<int> ticks_to_erase;
-	for(auto key_value : _buffer)
+	for (auto key_value : _buffer)
 	{
-		if(key_value.key < earliest_tick_to_keep)
+		if (key_value.key < earliest_tick_to_keep)
 			ticks_to_erase.push_back(key_value.key);
 	}
 
-	for(const int& tick : ticks_to_erase)
+	for (int tick : ticks_to_erase)
 		_buffer.erase(tick);
 }
 

@@ -50,7 +50,7 @@ public:
 	void record_state(int tick);
 
 	bool _should_record_tick(int tick);
-	Array _get_state_props_to_record(int tick);
+	TypedArray<PropertyEntry> _get_state_props_to_record(int tick);
 
 // Shared utils, extract later
 	bool _should_record_property(Ref<PropertyEntry> property_entry, int tick);

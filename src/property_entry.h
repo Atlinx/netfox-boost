@@ -15,11 +15,7 @@ class PropertyEntry : public RefCounted {
 public:
 
 protected:
-	static Ref<_NetfoxLogger> _logger()
-	{
-		static Ref<_NetfoxLogger> ref = _NetfoxLogger::for_netfox("PropertyEntry");
-		return ref;
-	}
+	static Ref<_NetfoxLogger> _logger;
 	static void _bind_methods();
 
 public:

@@ -22,20 +22,15 @@ protected:
 	Ref<_PropertyHistoryBuffer> _history;
 	Ref<PropertyCache> _property_cache;
 
-	Dictionary _full_snapshot = Dictionary();
-	Dictionary _encoded_snapshot = Dictionary();
+	Dictionary _full_snapshot;
+	Dictionary _encoded_snapshot;
 
 	InternalBiMap<int, String> _property_indexes;
 
 	uint8_t _version = 0;
 	bool _has_received = false;
 
-	static Ref<_NetfoxLogger> _logger() 
-	{
-		static Ref<_NetfoxLogger> ref = _NetfoxLogger::for_netfox("DiffHistoryEncoder");
-		return ref;
-	}
-	
+	static Ref<_NetfoxLogger> _logger;
 	static void _bind_methods();
 
 public:

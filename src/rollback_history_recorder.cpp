@@ -14,6 +14,7 @@ void _RollbackHistoryRecorder::configure(Ref<_PropertyHistoryBuffer> p_state_his
 	_input_property_config = p_input_property_config;
 	_property_cache = p_property_cache;
 	_skipset = p_skipset;
+	// print_line("_RollbackHistoryRecorder::configure: cache: ", _property_cache);
 }
 
 void _RollbackHistoryRecorder::set_latest_state_tick(int p_latest_state_tick)
@@ -23,7 +24,6 @@ void _RollbackHistoryRecorder::set_latest_state_tick(int p_latest_state_tick)
 
 void _RollbackHistoryRecorder::apply_state(int tick)
 {
-
 	// Apply state for tick
 	Ref<_PropertySnapshot> state = _state_history->get_history(tick);
 	state->apply(_property_cache);
@@ -36,16 +36,20 @@ void _RollbackHistoryRecorder::apply_display_state()
 
 void _RollbackHistoryRecorder::apply_tick(int tick)
 {
+	// print_line("_RollbackHistoryRecorder::apply_tick: ", tick, " cache: ", _property_cache);
+	// print_line("  state_history->get_history");
 	Ref<_PropertySnapshot> state = _state_history->get_history(tick);
+	// print_line("  input_history->get_history");
 	Ref<_PropertySnapshot> input = _input_history->get_history(tick);
 
+	// print_line("  state::apply_tick: state: ", state, " is valid: ", state.is_valid());
 	state->apply(_property_cache);
+	// print_line("  input::apply_tick: input: ", input, " is valid: ", input.is_valid());
 	input->apply(_property_cache);
 }
 
 void _RollbackHistoryRecorder::trim_history()
 {
-
 	// Trim history
 	_state_history->trim();
 	_input_history->trim();
@@ -53,7 +57,6 @@ void _RollbackHistoryRecorder::trim_history()
 
 void _RollbackHistoryRecorder::record_input(int tick)
 {
-
 	// Record input
 	if(!_get_recorded_input_props().is_empty())
 	{
@@ -67,54 +70,39 @@ void _RollbackHistoryRecorder::record_state(int tick)
 {
 	// Record state for specified tick ( current + 1 )
 	// Check if any of the managed nodes were mutated
-    Node* network_rollback = Utils::get_autoload("NetworkRollback");
-    if (!network_rollback) {
-        ERR_FAIL_MSG("NetworkRollback autoload not found for mutation check.");
-        return;
-    }
-
-    bool is_mutated = false;
-    for (Ref<PropertyEntry> pe : _get_recorded_state_props()) {
-        if (Object::cast_to<Node>(pe->node)) {
-            is_mutated = network_rollback->call("is_mutated", pe->node, tick - 1);
-            if (is_mutated)
-                break;
-        }
-    }
-    
-    Ref<_PropertySnapshot> record_state = _PropertySnapshot::extract(_get_state_props_to_record(tick));
-    if (record_state.is_valid() && record_state->size() > 0)
-    {
-        Ref<_PropertySnapshot> merge_state = _state_history->get_history(tick - 1);
-        
-        if (merge_state.is_valid())
-            _state_history->set_snapshot(tick, merge_state->merge(record_state));
-        else
-            _state_history->set_snapshot(tick, record_state);
-    }
+	Node* network_rollback = Utils::get_autoload("NetworkRollback");
+	bool is_mutated = false;
+	for (Ref<PropertyEntry> pe : _get_recorded_state_props()) 
+	{
+		is_mutated = network_rollback->call("is_mutated", pe->node, tick - 1);
+		if (is_mutated)
+			break;
+	}
+	
+	Ref<_PropertySnapshot> record_state = _PropertySnapshot::extract(_get_state_props_to_record(tick));
+	if (record_state->size() > 0)
+	{
+		Ref<_PropertySnapshot> merge_state = _state_history->get_history(tick - 1);
+		_state_history->set_snapshot(tick, merge_state->merge(record_state));
+	}
 }
 
 bool _RollbackHistoryRecorder::_should_record_tick(int tick)
 {
 	TypedArray<PropertyEntry> recorded_state_props = _get_recorded_state_props();
-
-	if (recorded_state_props.is_empty()) {
+	if (recorded_state_props.is_empty()) 
+	{
 		// Don't record tick if there's no props to record
 		return false;
 	}
 
 	Node* network_rollback = Utils::get_autoload("NetworkRollback");
-	if (!network_rollback) {
-		ERR_FAIL_V_MSG(false, "NetworkRollback autoload not found for mutation check.");
-	}
-
 	bool was_mutated = false;
-	for (Ref<PropertyEntry> pe : recorded_state_props) {
-		if (pe->node) {
-			was_mutated = network_rollback->call("is_mutated", pe->node, tick - 1);
-			if (was_mutated)
-				break;
-		}
+	for (Ref<PropertyEntry> pe : recorded_state_props) 
+	{
+		was_mutated = network_rollback->call("is_mutated", pe->node, tick - 1);
+		if (was_mutated)
+			break;
 	}
     
 	if (was_mutated) {
@@ -139,22 +127,15 @@ bool _RollbackHistoryRecorder::_should_record_property(Ref<PropertyEntry> proper
 	return true;
 }
 
-Array _RollbackHistoryRecorder::_get_state_props_to_record(int tick)
+TypedArray<PropertyEntry> _RollbackHistoryRecorder::_get_state_props_to_record(int tick)
 {
-	if (!_should_record_tick(tick)) {
-		return Array(); // Equivalent of []
-	}
+	if (!_should_record_tick(tick)) 
+		return Array();
+	if (_skipset->is_empty())
+		return _get_recorded_state_props();
 
-	Array recorded_state_props = _get_recorded_state_props();
-
-	// Assuming _skipset is a godot::HashSet (which has .is_empty())
-	if (_skipset->is_empty()) {
-		return recorded_state_props;
-	}
-
-	// Implementation of .filter(func(pe): return _should_record_property(pe, tick))
-	Array filtered_props;
-	for (Ref<PropertyEntry> pe : recorded_state_props) {
+	TypedArray<PropertyEntry> filtered_props;
+	for (Ref<PropertyEntry> pe : _get_recorded_state_props()) {
 		if (_should_record_property(pe, tick)) {
 			filtered_props.push_back(pe);
 		}

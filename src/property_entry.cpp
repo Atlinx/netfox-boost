@@ -38,12 +38,19 @@ void PropertyEntry::set_property(const String& p_property)
 
 Variant PropertyEntry::get_value()
 {
-	return node->get_indexed(property);
+	// print_line("				PropertyEntry::get_value: node: '", node, "' prop: '", property, "'");
+	// ERR_FAIL_COND_V_MSG(!is_valid(), Variant(), vformat("PropertyEntry::get_value: Not valid! node: '%s' property: '%s'", node, property));
+	Variant value = node->get_indexed(property);
+	// print_line("				'- value: ", value);
+	return value;
 }
 
 void PropertyEntry::set_value(Variant value)
 {
+	// print_line("				PropertyEntry::set_value: node: '", node, "' prop: '", property, "' = ", value);
+	// ERR_FAIL_COND_MSG(!is_valid(), vformat("PropertyEntry::set_value: Not valid! node: '%s' property: '%s' = %s", node, property, value));
 	node->set_indexed(property, value);
+	// print_line("				'- success");
 }
 
 bool PropertyEntry::is_valid()
@@ -94,7 +101,7 @@ String PropertyEntry::make_path(Node* root, Variant node, String property)
 	}
 	else
 	{
-		_logger()->error(vformat("Can't stringify node reference: %s", node));
+		_logger->error(vformat("Can't stringify node reference: %s", node));
 		return "";
 	}
 
@@ -106,8 +113,12 @@ String PropertyEntry::make_path(Node* root, Variant node, String property)
 	return vformat("%s:%s", node_path, property);
 }
 
+Ref<_NetfoxLogger> PropertyEntry::_logger;
+
 void PropertyEntry::_bind_methods()
 {
+	_logger = _NetfoxLogger::for_netfox("PropertyEntry");
+
 	ClassDB::bind_static_method("PropertyEntry", D_METHOD("parse", "root", "path"), &PropertyEntry::parse);
 	ClassDB::bind_static_method("PropertyEntry", D_METHOD("make_path", "root", "node", "property"), &PropertyEntry::make_path);
 

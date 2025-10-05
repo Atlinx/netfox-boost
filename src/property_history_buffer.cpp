@@ -14,7 +14,7 @@
 
 Ref<_PropertySnapshot> _PropertyHistoryBuffer::get_snapshot(int tick)
 {
-	if(_buffer.has(tick))
+	if (_buffer.has(tick))
 		return _buffer[tick];
 	else
 		return _PropertySnapshot::new_();
@@ -22,12 +22,12 @@ Ref<_PropertySnapshot> _PropertyHistoryBuffer::get_snapshot(int tick)
 
 void _PropertyHistoryBuffer::set_snapshot(int tick, Variant data)
 {
-	if(data.get_type() == Variant::DICTIONARY)
+	if (data.get_type() == Variant::DICTIONARY)
 	{
 		Ref<_PropertySnapshot> snapshot = _PropertySnapshot::from_dictionary(data);
 		_HistoryBuffer::set_snapshot(tick, snapshot);
 	}
-	else if(Object::cast_to<_PropertySnapshot>(data))
+	else if (Object::cast_to<_PropertySnapshot>(data))
 		_HistoryBuffer::set_snapshot(tick, data);
 	else
 		UtilityFunctions::push_error(vformat("Data not a PropertSnapshot! %s", data));
@@ -36,7 +36,6 @@ void _PropertyHistoryBuffer::set_snapshot(int tick, Variant data)
 Ref<_PropertySnapshot> _PropertyHistoryBuffer::get_history(int tick)
 {
 	Variant snapshot = _HistoryBuffer::get_history(tick);
-
 	return ( snapshot ? snapshot : _PropertySnapshot::new_() );
 }
 
@@ -56,7 +55,8 @@ void _PropertyHistoryBuffer::merge(Ref<_PropertySnapshot> data, int tick)
 	set_snapshot(tick, get_snapshot(tick)->merge(data));
 }
 
-void _PropertyHistoryBuffer::_bind_methods() {
+void _PropertyHistoryBuffer::_bind_methods() 
+{
 	ClassDB::bind_method(D_METHOD("get_snapshot", "tick"), &_PropertyHistoryBuffer::get_snapshot);
 	ClassDB::bind_method(D_METHOD("set_snapshot", "tick", "data"), &_PropertyHistoryBuffer::set_snapshot);
 	ClassDB::bind_method(D_METHOD("get_history", "tick"), &_PropertyHistoryBuffer::get_history);

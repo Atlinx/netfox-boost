@@ -9,26 +9,22 @@
 
 void PeerVisibilityFilter::add_visibility_filter(Callable filter)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::add_visibility_filter");
   if(!_visibility_filters.has(filter))
     _visibility_filters.append(filter);
 }
 
 void PeerVisibilityFilter::remove_visibility_filter(Callable filter)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::remove_visibility_filter");
   _visibility_filters.erase(filter);
 }
 
 void PeerVisibilityFilter::clear_visibility_filters()
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::clear_visibility_filters");
   _visibility_filters.clear();
 }
 
 bool PeerVisibilityFilter::get_visibility_for(int peer)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::get_visibility_for");
   for(int i = 0; i < _visibility_filters.size(); ++i)
   {
     Callable filter = _visibility_filters[i];
@@ -40,7 +36,6 @@ bool PeerVisibilityFilter::get_visibility_for(int peer)
 
 void PeerVisibilityFilter::set_visibility_for(int peer, bool visibility)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::set_visibility_for");
   if(peer == 0)
     default_visibility = visibility;
   else
@@ -49,13 +44,11 @@ void PeerVisibilityFilter::set_visibility_for(int peer, bool visibility)
 
 void PeerVisibilityFilter::unset_visibility_for(int peer)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::unset_visibility_for");
   _visibility_overrides.erase(peer);
 }
 
 void PeerVisibilityFilter::update_visibility(PackedInt32Array peers)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::update_visibility");
   if (peers.size() == 0) 
     peers = get_multiplayer()->get_peers();
 
@@ -106,19 +99,16 @@ void PeerVisibilityFilter::update_visibility(PackedInt32Array peers)
 
 TypedArray<int> PeerVisibilityFilter::get_visible_peers()
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::get_visible_peers");
   return _visible_peers;
 }
 
 TypedArray<int> PeerVisibilityFilter::get_rpc_target_peers()
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::get_rpc_target_peers");
   return _rpc_target_peers;
 }
 
 void PeerVisibilityFilter::set_update_mode(PeerVisibilityFilter::UpdateMode mode)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::set_update_mode");
   _disconnect_update_handlers(_update_mode);
   _connect_update_handlers(mode);
   _update_mode = mode;
@@ -126,7 +116,6 @@ void PeerVisibilityFilter::set_update_mode(PeerVisibilityFilter::UpdateMode mode
 
 PeerVisibilityFilter::UpdateMode PeerVisibilityFilter::get_update_mode()
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::get_update_mode");
   return _update_mode;
 }
 
@@ -134,7 +123,6 @@ void PeerVisibilityFilter::_enter_tree()
 {
 	if (!Engine::get_singleton() || Engine::get_singleton()->is_editor_hint())
 		return;
-  godot::UtilityFunctions::print("PeerVisibilityFilter::_enter_tree");
   _connect_update_handlers(_update_mode);
   if(get_multiplayer().is_valid())
     update_visibility();
@@ -144,13 +132,11 @@ void PeerVisibilityFilter::_exit_tree()
 {
 	if (!Engine::get_singleton() || Engine::get_singleton()->is_editor_hint())
 		return;
-  godot::UtilityFunctions::print("PeerVisibilityFilter::_exit_tree");
   _disconnect_update_handlers(_update_mode);
 }
 
 void PeerVisibilityFilter::_disconnect_update_handlers(PeerVisibilityFilter::UpdateMode mode)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::_disconnect_update_handlers");
   switch (mode) {
     case UpdateMode::UPDATE_NEVER:
       break;
@@ -198,7 +184,6 @@ void PeerVisibilityFilter::_disconnect_update_handlers(PeerVisibilityFilter::Upd
 
 void PeerVisibilityFilter::_connect_update_handlers(PeerVisibilityFilter::UpdateMode mode)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::_connect_update_handlers");
   switch (mode) {
     case UpdateMode::UPDATE_NEVER:
       break;
@@ -248,25 +233,21 @@ void PeerVisibilityFilter::_connect_update_handlers(PeerVisibilityFilter::Update
 
 void PeerVisibilityFilter::_handle_peer_connect(Variant __)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::_handle_peer_connect");
   update_visibility();
 }
 
 void PeerVisibilityFilter::_handle_peer_disconnect(Variant __)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::_handle_peer_disconnect");
   update_visibility();
 }
 
 void PeerVisibilityFilter::_handle_tick(Variant _dt, Variant _t)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::_handle_tick");
   update_visibility();
 }
 
 void PeerVisibilityFilter::_handle_rollback_tick(Variant __)
 {
-  godot::UtilityFunctions::print("PeerVisibilityFilter::_handle_rollback_tick");
   update_visibility();
 }
 

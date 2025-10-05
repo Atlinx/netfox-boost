@@ -33,25 +33,6 @@ Dictionary _NetfoxLogger::get_module_log_level()
 
 Ref<_NetfoxLogger> _NetfoxLogger::new_(String p_module, String p_name)
 {
-	if (Engine::get_singleton() && !Engine::get_singleton()->is_editor_hint())
-	{
-		if (ProjectSettings::get_singleton())
-		{
-			auto project_settings = ProjectSettings::get_singleton();
-			log_level = (LogLevel) (int) project_settings->get_setting("netfox/logging/log_level", DEFAULT_LOG_LEVEL);
-			module_log_level["netfox"] = (LogLevel) (int) project_settings->get_setting("netfox/logging/netfox_log_level", DEFAULT_LOG_LEVEL);
-			module_log_level["netfox.noray"] = (LogLevel) (int) project_settings->get_setting("netfox/logging/netfox_noray_log_level", DEFAULT_LOG_LEVEL);
-			module_log_level["netfox.extras"] = (LogLevel) (int) project_settings->get_setting("netfox/logging/netfox_extras_log_level", DEFAULT_LOG_LEVEL);
-			print_line("_NetfoxLogger: Initialized.");
-		} else 
-		{
-			UtilityFunctions::push_error("_NetfoxLogger: ProjectSettings singleton does not exist yet.");
-		}
-	} else 
-	{
-		UtilityFunctions::push_warning("_NetfoxLogger: Running in editor, not initializing.");
-	}
-
 	Ref<_NetfoxLogger> logger;
 	logger.instantiate();
 	logger->module = p_module;
@@ -210,7 +191,26 @@ void _NetfoxLogger::error(String text, Array values)
 }
 
 void _NetfoxLogger::_bind_methods() 
-{
+{	
+	if (Engine::get_singleton() && !Engine::get_singleton()->is_editor_hint())
+	{
+		if (ProjectSettings::get_singleton())
+		{
+			auto project_settings = ProjectSettings::get_singleton();
+			log_level = (LogLevel) (int) project_settings->get_setting("netfox/logging/log_level", DEFAULT_LOG_LEVEL);
+			module_log_level["netfox"] = (LogLevel) (int) project_settings->get_setting("netfox/logging/netfox_log_level", DEFAULT_LOG_LEVEL);
+			module_log_level["netfox.noray"] = (LogLevel) (int) project_settings->get_setting("netfox/logging/netfox_noray_log_level", DEFAULT_LOG_LEVEL);
+			module_log_level["netfox.extras"] = (LogLevel) (int) project_settings->get_setting("netfox/logging/netfox_extras_log_level", DEFAULT_LOG_LEVEL);
+			// print_line("_NetfoxLogger: Initialized.");
+		} else 
+		{
+			UtilityFunctions::push_error("_NetfoxLogger: ProjectSettings singleton does not exist yet.");
+		}
+	} else 
+	{
+		UtilityFunctions::push_warning("_NetfoxLogger: Running in editor, not initializing.");
+	}
+
 	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("new_", "p_module", "p_name"), &_NetfoxLogger::new_);
 
 	ClassDB::bind_static_method("_NetfoxLogger", D_METHOD("set_log_level", "level"), &_NetfoxLogger::set_log_level);

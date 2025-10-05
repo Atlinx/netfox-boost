@@ -62,12 +62,14 @@ bool _PropertySnapshot::is_empty()
 
 void _PropertySnapshot::apply(Ref<PropertyCache> cache)
 {
-	Array keys = _snapshot.keys();
-	for(int i = 0; i < keys.size(); ++i)
+	// print_line("_PropertySnapshot::apply: cache: ", cache);
+	for(String property_path : _snapshot.keys())
 	{
-		String property_path = keys[i];
+		// print_line("  apply path: ", property_path);
 		Ref<PropertyEntry> property_entry = cache->get_entry(property_path);
+		// print_line("    property_entry: ", property_entry);
 		Variant value = _snapshot[property_path];
+		// print_line("    value: ", value);
 		property_entry->set_value(value);
 	}
 }
@@ -75,29 +77,22 @@ void _PropertySnapshot::apply(Ref<PropertyCache> cache)
 Ref<_PropertySnapshot> _PropertySnapshot::merge(Ref<_PropertySnapshot> data)
 {
 	Dictionary result = _snapshot.duplicate();
-	Dictionary data_dict = data->as_dictionary();
-	Array keys = data_dict.keys();
-	for(int i = 0; i < keys.size(); ++i)
-	{
-		String key = data_dict[i];
+	for (String key : data->_snapshot.keys())
 		result[key] = data->_snapshot[key];
-	}
 
 	return from_dictionary(result);
 }
 
 Ref<_PropertySnapshot> _PropertySnapshot::make_patch(Ref<_PropertySnapshot> data)
 {
-	Dictionary result = Dictionary();
+	Dictionary result;
 
-	TypedArray<String> keys = data->properties();
-	for(int i = 0; i < keys.size(); ++i)
+	for (String property_path : data->properties())
 	{
-		String property_path = keys[i];
 		Variant old_property = get_value(property_path);
 		Variant new_property = data->get_value(property_path);
 
-		if(old_property != new_property)
+		if (old_property != new_property)
 			result[property_path] = new_property;
 	}
 
@@ -106,19 +101,17 @@ Ref<_PropertySnapshot> _PropertySnapshot::make_patch(Ref<_PropertySnapshot> data
 
 void _PropertySnapshot::sanitize(int sender, Ref<PropertyCache> property_cache)
 {
-	Dictionary sanitized = Dictionary();
+	Dictionary sanitized;
 
-	Array keys = _snapshot.keys();
-	for(int i = 0; i < keys.size(); ++i)
+	for (String property : _snapshot.keys())
 	{
-		Variant property = keys[i];
 		Ref<PropertyEntry> property_entry = property_cache->get_entry(property);
 		int authority = property_entry->node->get_multiplayer_authority();
 
-		if(authority == sender)
+		if (authority == sender)
 			sanitized[property] = _snapshot[property];
 		else
-			_logger()->warning(vformat("Received data for property %s, owned by %s, from sender %s", property, authority, sender));
+			_logger->warning(vformat("Received data for property %s, owned by %s, from sender %s", property, authority, sender));
 	}
 
 	_snapshot = sanitized;
@@ -126,17 +119,18 @@ void _PropertySnapshot::sanitize(int sender, Ref<PropertyCache> property_cache)
 
 Ref<_PropertySnapshot> _PropertySnapshot::extract(TypedArray<PropertyEntry> properties)
 {
-	Dictionary result = Dictionary();
-	for(int i = 0; i < properties.size(); ++i)
-	{
-		Ref<PropertyEntry> property = properties[i];
+	Dictionary result;
+	for (Ref<PropertyEntry> property : properties)
 		result[property->_to_string()] = property->get_value();
-	}
 	return from_dictionary(result);
 }
 
-void _PropertySnapshot::_bind_methods() 
+Ref<_NetfoxLogger> _PropertySnapshot::_logger;
+
+void _PropertySnapshot::_bind_methods()
 {
+	_logger = _NetfoxLogger::for_netfox("_PropertySnapshot");
+
 	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("new_", "p_snapshot"), &_PropertySnapshot::new_);
 	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("from_dictionary", "data"), &_PropertySnapshot::from_dictionary);
 	ClassDB::bind_static_method("_PropertySnapshot", D_METHOD("extract", "properties"), &_PropertySnapshot::extract);

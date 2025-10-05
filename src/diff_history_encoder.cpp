@@ -84,7 +84,7 @@ Ref<_PropertySnapshot> _DiffHistoryEncoder::decode(PackedByteArray data, TypedAr
 		else
 		{
 			// Since we don't remove entries, only add, we can still parse what we can
-			_logger()->warning(vformat("Property config version mismatch - own %d != received %d", _version, packet_version));
+			_logger->warning(vformat("Property config version mismatch - own %d != received %d", _version, packet_version));
 		}
 	}
 
@@ -96,11 +96,11 @@ Ref<_PropertySnapshot> _DiffHistoryEncoder::decode(PackedByteArray data, TypedAr
 		Variant property_value = buffer->get_var();
 		if(!_property_indexes.has_key(property_idx))
 		{
-			_logger()->warning(vformat("Received unknown property index %d, ignoring!", property_idx));
+			_logger->warning(vformat("Received unknown property index %d, ignoring!", property_idx));
 			continue;
 		}
 
-		Variant property_entry = _property_indexes.get_by_key(property_idx);
+		String property_entry = _property_indexes.get_by_key(property_idx);
 		result->set_value(property_entry, property_value);
 	}
 
@@ -112,7 +112,7 @@ bool _DiffHistoryEncoder::apply(int tick, Ref<_PropertySnapshot> snapshot, int r
 	if(tick < (int) Utils::get_autoload("NetworkRollback")->get("history_start"))
 	{
 		// State too old!
-		_logger()->error(vformat("Received diff snapshot for @%d, rejecting because older than %s frames", tick, Utils::get_autoload("NetworkRollback")->get("history_limit")));
+		_logger->error(vformat("Received diff snapshot for @%d, rejecting because older than %s frames", tick, Utils::get_autoload("NetworkRollback")->get("history_limit")));
 		return false;
 	}
 
@@ -124,7 +124,7 @@ bool _DiffHistoryEncoder::apply(int tick, Ref<_PropertySnapshot> snapshot, int r
 		snapshot->sanitize(sender, _property_cache);
 		if(snapshot->is_empty())
 		{
-			_logger()->warning(vformat("Received invalid diff from #%s for @%s", sender, tick));
+			_logger->warning(vformat("Received invalid diff from #%s for @%s", sender, tick));
 			return false;
 		}
 	}
@@ -132,7 +132,7 @@ bool _DiffHistoryEncoder::apply(int tick, Ref<_PropertySnapshot> snapshot, int r
 	if(!_history->has(reference_tick))
 	{
 		// Reference tick missing, hope for the best
-		_logger()->warning(vformat("Reference tick %d missing for #%s applying %d", reference_tick, sender, tick));
+		_logger->warning(vformat("Reference tick %d missing for #%s applying %d", reference_tick, sender, tick));
 	}
 
 	Ref<_PropertySnapshot> reference_snapshot = _history->get_snapshot(reference_tick);
@@ -168,8 +168,12 @@ bool _DiffHistoryEncoder::_ensure_property_idx(String property)
 	return true;
 }
 
+Ref<_NetfoxLogger> _DiffHistoryEncoder::_logger;
+
 void _DiffHistoryEncoder::_bind_methods() 
 {
+	_logger = _NetfoxLogger::for_netfox("DiffHistoryEncoder");
+	
 	ClassDB::bind_static_method("_DiffHistoryEncoder", D_METHOD("new_", "p_history", "p_property_cache"), &_DiffHistoryEncoder::new_);
 	ClassDB::bind_method(D_METHOD("add_properties", "properties"), &_DiffHistoryEncoder::add_properties);
 	ClassDB::bind_method(D_METHOD("encode", "tick", "reference_tick", "properties"), &_DiffHistoryEncoder::encode);
