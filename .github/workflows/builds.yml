@@ -16,19 +16,19 @@ jobs:
         target:
           [
             { platform: linux, arch: x86_64, os: ubuntu-22.04 },
-            { platform: linux, arch: x86_32, os: ubuntu-22.04 },
-            { platform: linux, arch: arm64, os: ubuntu-22.04-arm },
-            { platform: linux, arch: arm32, os: ubuntu-22.04-arm },
-            { platform: windows, arch: x86_64, os: windows-latest },
-            { platform: windows, arch: x86_32, os: windows-latest },
-            { platform: windows, arch: arm64, os: windows-latest },
-            { platform: macos, arch: universal, os: macos-latest },
-            { platform: android, arch: x86_64, os: ubuntu-22.04 },
-            { platform: android, arch: x86_32, os: ubuntu-22.04 },
-            { platform: android, arch: arm64, os: ubuntu-22.04 },
-            { platform: android, arch: arm32, os: ubuntu-22.04 },
-            { platform: ios, arch: arm64, os: macos-latest },
-            { platform: web, arch: wasm32, os: ubuntu-22.04 },
+            # { platform: linux, arch: x86_32, os: ubuntu-22.04 },
+            # { platform: linux, arch: arm64, os: ubuntu-22.04-arm },
+            # { platform: linux, arch: arm32, os: ubuntu-22.04-arm },
+            # { platform: windows, arch: x86_64, os: windows-latest },
+            # { platform: windows, arch: x86_32, os: windows-latest },
+            # { platform: windows, arch: arm64, os: windows-latest },
+            # { platform: macos, arch: universal, os: macos-latest },
+            # { platform: android, arch: x86_64, os: ubuntu-22.04 },
+            # { platform: android, arch: x86_32, os: ubuntu-22.04 },
+            # { platform: android, arch: arm64, os: ubuntu-22.04 },
+            # { platform: android, arch: arm32, os: ubuntu-22.04 },
+            # { platform: ios, arch: arm64, os: macos-latest },
+            # { platform: web, arch: wasm32, os: ubuntu-22.04 },
           ]
         target-type: [template_debug, template_release]
         float-precision: [single] # Only single precision supported for now
@@ -128,8 +128,11 @@ jobs:
         shell: sh
         run: |
           mkdir -p ./netfox/bin
-          mv ./demo/addons/netfox/netfox-boost.gdextension ./netfox
-          mv ./netfox-boost-bin/* ./netfox/bin/
+          ls
+          mv ./demo/addons/netfox/* ./netfox
+          mv ./netfox/bin/netfox-boost.gdextension ./netfox-boost-bin/
+          rm -rf ./netfox/bin
+          mv ./netfox-boost-bin ./netfox/bin
           
       - name: Upload Final Package Artifact
         uses: actions/upload-artifact@v4
