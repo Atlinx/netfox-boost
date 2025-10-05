@@ -36,7 +36,7 @@ void _PropertyHistoryBuffer::set_snapshot(int tick, Variant data)
 Ref<_PropertySnapshot> _PropertyHistoryBuffer::get_history(int tick)
 {
 	Variant snapshot = _HistoryBuffer::get_history(tick);
-	return ( snapshot ? snapshot : _PropertySnapshot::new_() );
+	return (snapshot ? (Ref<_PropertySnapshot>) snapshot : _PropertySnapshot::new_());
 }
 
 void _PropertyHistoryBuffer::trim(int earliest_tick_to_keep)
